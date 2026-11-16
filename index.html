@@ -6209,18 +6209,18 @@ Jom pakat mari ramai-ramai!
       document.getElementById('btnWaHantar').disabled = !adaTel;
       document.getElementById('waNaikPeringkat').checked = (l.peringkat === 'Baru');
 
-      // Isi dropdown templat
-      if (!appState.waTemplat.length) await loadWaTemplat();
       const sel = document.getElementById('waTemplatPilih');
-      const aktif = appState.waTemplat.filter(t => t.aktif);
-      sel.innerHTML = '<option value="">— Tulis sendiri —</option>' +
-        aktif.map(t => '<option value="' + esc(t.id) + '">' + esc(t.nama) + ' (' + esc(t.kategori) + ')</option>').join('');
-
+      sel.innerHTML = '<option value="">— Memuatkan templat... —</option>';
       document.getElementById('waMesej').value = '';
       document.getElementById('waTagSenarai').textContent = WA_TAG.join(' · ');
       kemaskiniKiraWa();
 
       openModal('waModal');
+
+      if (!appState.waTemplat.length) await loadWaTemplat();
+      const aktif = appState.waTemplat.filter(t => t.aktif);
+      sel.innerHTML = '<option value="">— Tulis sendiri —</option>' +
+        aktif.map(t => '<option value="' + esc(t.id) + '">' + esc(t.nama) + ' (' + esc(t.kategori) + ')</option>').join('');
     }
 
     function gunakanWaTemplat() {
