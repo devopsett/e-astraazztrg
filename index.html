@@ -4107,9 +4107,13 @@
         if (!res.ok) throw new Error(res.message);
         showToast('Transaksi berjaya didaftarkan.');
         closeTxModal();
-        appState.data = res.data;
-        try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
-        renderDashboard(); renderLogs(); renderItems();
+        if (res.data) {
+          appState.data = res.data;
+          try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
+          renderDashboard(); renderLogs(); renderItems();
+        } else {
+          await loadData(true);
+        }
         document.getElementById('txNote').value = '';
         document.getElementById('batchContainer').innerHTML = '';
         addBatchRow();
@@ -4168,9 +4172,14 @@
         if (!res.ok) throw new Error(res.message);
         showToast('Maklumat item disimpan.');
         closeItemModal();
-        appState.data = res.data;
-        try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
-        renderDashboard(); renderItems(); resetItemForm();
+        if (res.data) {
+          appState.data = res.data;
+          try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
+          renderDashboard(); renderItems();
+        } else {
+          await loadData(true);
+        }
+        resetItemForm();
       })
       .catch(err => { showLoading(false); showToast(err.message || 'Ralat simpan item.', true); });
     }
@@ -4197,9 +4206,14 @@
         if (!res.ok) throw new Error(res.message);
         showToast('Item telah dipadamkan.');
         closeItemModal();
-        appState.data = res.data;
-        try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
-        renderDashboard(); renderItems(); resetItemForm();
+        if (res.data) {
+          appState.data = res.data;
+          try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
+          renderDashboard(); renderItems();
+        } else {
+          await loadData(true);
+        }
+        resetItemForm();
       })
       .catch(err => { showLoading(false); showToast(err.message || 'Ralat pemadaman.', true); });
     }
