@@ -4112,7 +4112,7 @@
           try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
           renderDashboard(); renderLogs(); renderItems();
         } else {
-          await loadData(true);
+          loadData(true);
         }
         document.getElementById('txNote').value = '';
         document.getElementById('batchContainer').innerHTML = '';
@@ -4177,7 +4177,7 @@
           try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
           renderDashboard(); renderItems();
         } else {
-          await loadData(true);
+          loadData(true);
         }
         resetItemForm();
       })
@@ -4211,7 +4211,7 @@
           try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
           renderDashboard(); renderItems();
         } else {
-          await loadData(true);
+          loadData(true);
         }
         resetItemForm();
       })
