@@ -4,9 +4,9 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>e-ASTRA</title>
+  <title>e-ASTRA | Hab Operasi Cawangan</title>
   
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/e-astratrg/manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -7917,7 +7917,7 @@ Jom pakat mari ramai-ramai!
 
     function registerServiceWorker() {
       if (!('serviceWorker' in navigator)) return;
-      navigator.serviceWorker.register('sw.js').then(reg => {
+      navigator.serviceWorker.register('/e-astratrg/sw.js', { scope: '/e-astratrg/' }).then(reg => {
         swRegistration = reg;
         reg.addEventListener('updatefound', () => {});
       }).catch(err => {
