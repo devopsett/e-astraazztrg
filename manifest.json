@@ -6,8 +6,8 @@
   "scope": "/e-astratrg/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#0b3818",
+  "theme_color": "#0b3818",
   "icons": [
     {
       "src": "/e-astratrg/Logo%20Azzuha.png",
