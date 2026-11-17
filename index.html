@@ -14,7 +14,7 @@
   <meta name="theme-color" content="#0b3818">
 
   <link rel="icon" type="image/png" sizes="192x192" href="Logo%20Azzuha.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="Logo%20Azzuha-512.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="Logo%20Azzuha.png">
   <link rel="apple-touch-icon" href="Logo%20Azzuha.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1793,6 +1793,24 @@
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
         <button type="button" class="btn-update-confirm" onclick="applySystemUpdate()">Pasang Sekarang</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- BANNER PEMASANGAN APLIKASI (PWA) -->
+  <div id="pwaInstallBanner" class="update-banner hidden" style="top: auto; bottom: 76px; background: #082911; border-color: rgba(110, 231, 183, 0.35);">
+    <div class="update-content">
+      <div class="update-header-row">
+        <div class="update-badge"><span class="update-badge-dot"></span><span>Aplikasi Telefon</span></div>
+      </div>
+      <div class="update-title">Pasang e-ASTRA di Skrin Utama</div>
+      <div style="font-size: var(--fs-sm); color: #d1fae5; line-height: 1.4;">
+        Akses lebih pantas tanpa bar pelayar seperti aplikasi natif.
+      </div>
+      <div class="update-action-row">
+        <button type="button" class="btn-update-later" onclick="dismissPwaBanner()">Nanti</button>
+        <button type="button" class="btn-update-confirm" id="btnPwaInstallConfirm" onclick="triggerPwaInstall()">Pasang Sekarang</button>
       </div>
     </div>
   </div>
@@ -7855,6 +7873,46 @@ Jom pakat mari ramai-ramai!
     /* ==========================================================================
        SERVICE WORKER & KEMAS KINI
        ========================================================================== */
+    
+    /* ==========================================================================
+       PEMASANGAN PWA (ANDROID CHROME & IOS SAFARI)
+       ========================================================================== */
+    let deferredInstallPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (!localStorage.getItem('eastra_pwa_dismissed')) {
+        const banner = document.getElementById('pwaInstallBanner');
+        if (banner) banner.classList.remove('hidden');
+      }
+    });
+
+    function dismissPwaBanner() {
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner) banner.classList.add('hidden');
+      safeSetItem('eastra_pwa_dismissed', '1');
+    }
+
+    async function triggerPwaInstall() {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner) banner.classList.add('hidden');
+      if (outcome === 'accepted') {
+        showToast('Aplikasi e-ASTRA sedang dipasang...');
+      }
+    }
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner) banner.classList.add('hidden');
+      showToast('e-ASTRA berjaya dipasang di peranti anda!');
+    });
+
     let swRegistration = null;
 
     function registerServiceWorker() {
