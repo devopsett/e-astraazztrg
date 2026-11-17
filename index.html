@@ -1533,6 +1533,23 @@
   
     /* ===== PENAMBAHBAIKAN UI MOBILE NATIF (<= 768px) ===== */
     @media (max-width: 768px) {
+      /* Skala Tipografi Seimbang untuk Mobile (tidak terlalu besar, tidak terlalu kecil) */
+      :root {
+        --fs-2xs: 10.5px;
+        --fs-xs: 11.5px;
+        --fs-sm: 12.5px;
+        --fs-base: 13.5px;
+        --fs-md: 14px;
+        --fs-lg: 15.5px;
+        --fs-xl: 18px;
+        --fs-2xl: 22px;
+      }
+
+      body {
+        font-size: 13.5px;
+        line-height: 1.5;
+      }
+
       /* 1. Topbar sticky & kemas dengan butang segar semula (refresh) untuk mobile */
       .topbar {
         position: sticky;
@@ -1540,7 +1557,7 @@
         z-index: 40;
         border-radius: 0 0 var(--radius) var(--radius);
         margin: -14px -16px 14px -16px;
-        padding: 12px 14px;
+        padding: 11px 14px;
         background: rgba(255, 255, 255, 0.96);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
@@ -1559,73 +1576,87 @@
         text-overflow: ellipsis;
       }
       .topbar-title p {
-        display: none; /* Jimat ruang menegak di telefon */
+        display: none;
       }
       .topbar-actions { gap: 6px; flex-shrink: 0; }
-      .sync-badge { padding: 4px 8px; font-size: 10px; }
-      .sync-badge #syncStatusText { display: none; } /* Tunjuk titik status sahaja di mobile */
+      .sync-badge { padding: 4px 8px; font-size: 10.5px; }
+      .sync-badge #syncStatusText { display: none; }
       .btn-icon-refresh {
-        display: grid !important; /* Aktifkan semula butang refresh di mobile */
-        width: 32px;
-        height: 32px;
-        min-height: 32px;
+        display: grid !important;
+        width: 34px;
+        height: 34px;
+        min-height: 34px;
       }
       .user-chip {
-        padding: 4px 8px;
-        max-width: 115px;
-        font-size: 11px;
+        padding: 5px 9px;
+        max-width: 120px;
+        font-size: 12px;
         gap: 4px;
       }
       .user-peranan { display: none; }
 
-      /* 2. Kad Metrik 2-lajur padat & seimbang (termasuk Jemaah 3-kad & Leads 4-kad) */
+      /* 2. Kad Metrik 2-lajur dengan saiz fon seimbang */
       .metrics-grid,
       #tab-jemaahList .metrics-grid,
       #tab-leads .metrics-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 8px !important;
-        margin-bottom: 12px !important;
+        gap: 9px !important;
+        margin-bottom: 14px !important;
       }
       .metric-card {
-        padding: 12px 12px;
-        border-radius: 10px;
+        padding: 12px 13px;
+        border-radius: 11px;
       }
-      .metric-title { font-size: 9.5px; letter-spacing: 0.5px; }
-      .metric-val { font-size: 21px; margin: 4px 0 2px; }
-      .metric-sub { font-size: 10.5px; }
+      .metric-title { font-size: 10.5px; letter-spacing: 0.4px; }
+      .metric-val { font-size: 22px; margin: 4px 0 2px; }
+      .metric-sub { font-size: 11.5px; }
 
-      /* 3. Panel & Filter Pills lebih rapat dan selesa disentuh */
+      /* 3. Panel, Kad Rekod & Filter Pills */
       .panel { border-radius: var(--radius); margin-bottom: 12px; }
       .panel-header { padding: 12px 14px; gap: 8px; }
-      .panel-header h3 { font-size: 15px; }
+      .panel-header h3 { font-size: 15.5px; }
       .panel-body { padding: 12px 14px; }
-      .pill-btn { padding: 6px 12px; font-size: 11.5px; }
+      .pill-btn { padding: 7px 13px; font-size: 12px; }
 
-      /* 4. Elak auto-zoom iOS Safari pada input (< 16px akan zoom automatik di iOS) */
+      .card-title, .lead-nama { font-size: 14px; }
+      .card-sub, .lead-sub { font-size: 12px; }
+      .card-row-bottom, .lead-kad-bawah { font-size: 12.5px; }
+      .badge, .peringkat-badge { font-size: 10.5px; padding: 3px 8px; }
+
+      /* 4. Input, Select & Label Borang (saiz selesa tanpa kelihatan terlalu besar) */
+      label { font-size: 12px; margin-bottom: 4px; }
       input, select, textarea {
-        font-size: 16px !important;
-        min-height: 44px;
+        font-size: 14.5px !important;
+        min-height: 40px;
+        padding: 8px 11px;
       }
       #tableSearch, #cariJemaahInput, #tapisPUSelect, #auditCari, #auditTapisTindakan {
         width: 100% !important;
-        min-height: 40px !important;
+        font-size: 13.5px !important;
+        min-height: 38px !important;
       }
+      .btn { font-size: 13.5px; min-height: 40px; }
+      .btn-sm { font-size: 12.5px; min-height: 34px; }
+      .btn-xs { font-size: 11.5px; min-height: 28px; }
 
-      /* 5. Bar Navigasi Bawah & Sub-Nav dengan sokongan Safe Area (iPhone notch/home bar) */
+      /* 5. Bar Navigasi Bawah & Sub-Nav */
       .mobile-nav {
         height: calc(60px + env(safe-area-inset-bottom, 0px));
         padding-bottom: env(safe-area-inset-bottom, 4px);
         background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(8px);
       }
+      .m-btn { font-size: 11px; gap: 3px; }
+      .m-btn svg { width: 19px; height: 19px; }
+
       .mobile-sub-nav {
         bottom: calc(60px + env(safe-area-inset-bottom, 0px));
         padding: 7px 12px;
         background: #f8fafc;
       }
-      .mobile-sub-btn { padding: 6px 13px; font-size: 11.5px; }
+      .mobile-sub-btn { padding: 6px 13px; font-size: 12px; }
 
-      /* 6. Butang Terapung (FAB) diletakkan tepat di atas bar sub-nav supaya tidak menghalang kad */
+      /* 6. Butang Terapung (FAB) */
       .fab-btn {
         bottom: calc(118px + env(safe-area-inset-bottom, 0px));
         right: 16px;
@@ -1634,17 +1665,18 @@
         border-radius: 16px;
       }
 
-      /* 7. Toast notifikasi diletakkan di bahagian atas supaya tidak bertindih dengan FAB/Nav */
+      /* 7. Toast notifikasi di atas */
       .toast {
         top: 66px;
         bottom: auto !important;
         left: 14px;
         right: 14px;
+        font-size: 13px;
         transform: translateY(-90px);
       }
       .toast.show { transform: translateY(0); }
 
-      /* 8. Modal Bottom-Sheet di telefon (mudah dicapai dengan ibu jari) */
+      /* 8. Modal Bottom-Sheet di telefon */
       .modal-overlay {
         padding: 0 !important;
         align-items: end !important;
@@ -1662,16 +1694,16 @@
         from { transform: translateY(100%); opacity: 0.6; }
         to { transform: translateY(0); opacity: 1; }
       }
-      .modal-header {
-        padding: 14px 16px;
-        position: relative;
-      }
+      .modal-header { padding: 13px 16px; position: relative; }
+      .modal-header h4 { font-size: 16px; }
       .modal-body {
-        max-height: calc(90vh - 58px) !important;
+        max-height: calc(90vh - 56px) !important;
         padding: 14px 16px 24px !important;
       }
+      .detail-label { font-size: 11px; }
+      .detail-value { font-size: 13.5px; }
 
-      /* 9. Kad Umrah & Butang Tindakan penuh lebar di mobile */
+      /* 9. Kad Umrah & Butang Tindakan */
       .umrah-card { padding: 14px; }
       .form-item-actions {
         display: grid !important;
@@ -1684,7 +1716,6 @@
         justify-content: center;
       }
     }
-
   </style>
 </head>
 <body>
