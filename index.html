@@ -1530,6 +1530,161 @@
       .modal-body { max-height: calc(85vh - 60px); padding: 16px; overflow-x: hidden; }
       .form-item-actions { width: 100%; justify-content: flex-end; }
     }
+  
+    /* ===== PENAMBAHBAIKAN UI MOBILE NATIF (<= 768px) ===== */
+    @media (max-width: 768px) {
+      /* 1. Topbar sticky & kemas dengan butang segar semula (refresh) untuk mobile */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        border-radius: 0 0 var(--radius) var(--radius);
+        margin: -14px -16px 14px -16px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+        border-left: none;
+        border-right: none;
+        border-top: none;
+      }
+      .topbar::before { display: none; }
+      .topbar-left { gap: 10px; min-width: 0; flex: 1; }
+      .topbar-title { min-width: 0; }
+      .topbar-title h2 {
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .topbar-title p {
+        display: none; /* Jimat ruang menegak di telefon */
+      }
+      .topbar-actions { gap: 6px; flex-shrink: 0; }
+      .sync-badge { padding: 4px 8px; font-size: 10px; }
+      .sync-badge #syncStatusText { display: none; } /* Tunjuk titik status sahaja di mobile */
+      .btn-icon-refresh {
+        display: grid !important; /* Aktifkan semula butang refresh di mobile */
+        width: 32px;
+        height: 32px;
+        min-height: 32px;
+      }
+      .user-chip {
+        padding: 4px 8px;
+        max-width: 115px;
+        font-size: 11px;
+        gap: 4px;
+      }
+      .user-peranan { display: none; }
+
+      /* 2. Kad Metrik 2-lajur padat & seimbang (termasuk Jemaah 3-kad & Leads 4-kad) */
+      .metrics-grid,
+      #tab-jemaahList .metrics-grid,
+      #tab-leads .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+      }
+      .metric-card {
+        padding: 12px 12px;
+        border-radius: 10px;
+      }
+      .metric-title { font-size: 9.5px; letter-spacing: 0.5px; }
+      .metric-val { font-size: 21px; margin: 4px 0 2px; }
+      .metric-sub { font-size: 10.5px; }
+
+      /* 3. Panel & Filter Pills lebih rapat dan selesa disentuh */
+      .panel { border-radius: var(--radius); margin-bottom: 12px; }
+      .panel-header { padding: 12px 14px; gap: 8px; }
+      .panel-header h3 { font-size: 15px; }
+      .panel-body { padding: 12px 14px; }
+      .pill-btn { padding: 6px 12px; font-size: 11.5px; }
+
+      /* 4. Elak auto-zoom iOS Safari pada input (< 16px akan zoom automatik di iOS) */
+      input, select, textarea {
+        font-size: 16px !important;
+        min-height: 44px;
+      }
+      #tableSearch, #cariJemaahInput, #tapisPUSelect, #auditCari, #auditTapisTindakan {
+        width: 100% !important;
+        min-height: 40px !important;
+      }
+
+      /* 5. Bar Navigasi Bawah & Sub-Nav dengan sokongan Safe Area (iPhone notch/home bar) */
+      .mobile-nav {
+        height: calc(60px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: env(safe-area-inset-bottom, 4px);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(8px);
+      }
+      .mobile-sub-nav {
+        bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+        padding: 7px 12px;
+        background: #f8fafc;
+      }
+      .mobile-sub-btn { padding: 6px 13px; font-size: 11.5px; }
+
+      /* 6. Butang Terapung (FAB) diletakkan tepat di atas bar sub-nav supaya tidak menghalang kad */
+      .fab-btn {
+        bottom: calc(118px + env(safe-area-inset-bottom, 0px));
+        right: 16px;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+      }
+
+      /* 7. Toast notifikasi diletakkan di bahagian atas supaya tidak bertindih dengan FAB/Nav */
+      .toast {
+        top: 66px;
+        bottom: auto !important;
+        left: 14px;
+        right: 14px;
+        transform: translateY(-90px);
+      }
+      .toast.show { transform: translateY(0); }
+
+      /* 8. Modal Bottom-Sheet di telefon (mudah dicapai dengan ibu jari) */
+      .modal-overlay {
+        padding: 0 !important;
+        align-items: end !important;
+      }
+      .modal-dialog {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 90vh !important;
+        border-radius: 18px 18px 0 0 !important;
+        margin: 0 !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        animation: sheetUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @keyframes sheetUp {
+        from { transform: translateY(100%); opacity: 0.6; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .modal-header {
+        padding: 14px 16px;
+        position: relative;
+      }
+      .modal-body {
+        max-height: calc(90vh - 58px) !important;
+        padding: 14px 16px 24px !important;
+      }
+
+      /* 9. Kad Umrah & Butang Tindakan penuh lebar di mobile */
+      .umrah-card { padding: 14px; }
+      .form-item-actions {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .form-item-actions .btn,
+      .form-item-actions a.btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
   </style>
 </head>
 <body>
