@@ -1716,6 +1716,65 @@
         justify-content: center;
       }
     }
+  
+    /* ===== ANIMASI LOGO MEMUATKAN ===== */
+    .logo-loader-wrap {
+      position: relative;
+      width: 82px;
+      height: 82px;
+      margin: 0 auto;
+      display: grid;
+      place-items: center;
+    }
+    .logo-loader-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      border: 2.5px solid rgba(110, 231, 183, 0.22);
+      border-top-color: #34d399;
+      border-right-color: #a7f3d0;
+      animation: spin 1.1s cubic-bezier(0.5, 0.15, 0.5, 0.85) infinite;
+    }
+    .logo-loader-ring.light {
+      border-color: rgba(11, 56, 24, 0.14);
+      border-top-color: var(--primary);
+      border-right-color: #10b981;
+    }
+    .logo-loader-pulse {
+      position: absolute;
+      inset: 6px;
+      border-radius: 20px;
+      background: rgba(52, 211, 153, 0.18);
+      animation: logoGlowPulse 1.8s ease-in-out infinite;
+    }
+    .logo-loader-pulse.light {
+      background: rgba(16, 185, 129, 0.14);
+    }
+    .logo-loader-img {
+      position: relative;
+      width: 62px;
+      height: 62px;
+      border-radius: 17px;
+      object-fit: cover;
+      background: #0b3818;
+      border: 2px solid #a7f3d0;
+      box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.45);
+      animation: logoFloatBreath 1.8s ease-in-out infinite;
+      z-index: 1;
+    }
+    .logo-loader-img.light {
+      border-color: var(--primary);
+      box-shadow: 0 8px 20px -6px rgba(11, 56, 24, 0.35);
+    }
+    @keyframes logoFloatBreath {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    @keyframes logoGlowPulse {
+      0%, 100% { transform: scale(0.95); opacity: 0.35; }
+      50% { transform: scale(1.16); opacity: 0.85; }
+    }
+
   </style>
 </head>
 <body>
@@ -2194,7 +2253,11 @@
   <!-- LOADING OVERLAY -->
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align: center; padding: 24px;">
-      <div class="spinner" style="margin: 0 auto 12px;"></div>
+      <div class="logo-loader-wrap" style="margin-bottom: 14px;">
+        <div class="logo-loader-pulse light"></div>
+        <div class="logo-loader-ring light"></div>
+        <img src="Logo%20Azzuha.png" alt="e-ASTRA" class="logo-loader-img light">
+      </div>
       <p id="loadingMsg" style="font-size: var(--fs-base); font-weight: 700; color: var(--primary-dark);">Memproses...</p>
     </div>
   </div>
@@ -2402,11 +2465,12 @@
   <!-- SKRIN MEMUATKAN (semasa semak sesi) -->
   <div id="bootScreen" class="boot-screen">
     <div style="text-align:center;">
-      <img src="Logo%20Azzuha.png" alt="e-ASTRA" style="width:58px;height:58px;border-radius: var(--radius-lg);object-fit:cover;background:#0b3818;border:2px solid #a7f3d0;box-shadow:0 6px 18px -4px rgba(0,0,0,0.4);">
-      <div style="margin-top:16px;">
-        <div class="spinner" style="margin:0 auto;border-color:rgba(255,255,255,0.25);border-top-color:#6ee7b7;"></div>
+      <div class="logo-loader-wrap">
+        <div class="logo-loader-pulse"></div>
+        <div class="logo-loader-ring"></div>
+        <img src="Logo%20Azzuha.png" alt="e-ASTRA" class="logo-loader-img">
       </div>
-      <div style="color:#a7f3d0;font-size: var(--fs-sm);font-weight:700;margin-top:14px;letter-spacing:0.3px;">Memuatkan...</div>
+      <div style="color:#a7f3d0;font-size: var(--fs-sm);font-weight:700;margin-top:16px;letter-spacing:0.4px;">Memuatkan...</div>
     </div>
   </div>
 
