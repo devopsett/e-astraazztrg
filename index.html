@@ -3050,7 +3050,9 @@ Jom pakat mari ramai-ramai!
           liveUrl: res.formUrl,
           editUrl: res.editUrl,
           dateCreated: new Date().toLocaleDateString('ms-MY'),
-          eventDate: formattedDate
+          eventDate: formattedDate,
+          waktu: document.getElementById('ufWaktu').value.trim(),
+          tempat: document.getElementById('ufTempat').value.trim()
         });
         safeSetItem('eastra_umrah_forms', JSON.stringify(localForms));
 
@@ -3602,7 +3604,11 @@ Jom pakat mari ramai-ramai!
         const copyBtn = e.target.closest('[data-copy-url]');
         if (copyBtn) { copyDirectText(copyBtn.getAttribute('data-copy-url')); return; }
         const shareBtn = e.target.closest('[data-share-index]');
-        if (shareBtn) { const f = appState.umrahForms[Number(shareBtn.getAttribute('data-share-index'))]; if (f) shareToWhatsApp(f.eventDate, '', '', f.liveUrl); return; }
+        if (shareBtn) {
+          const f = appState.umrahForms[Number(shareBtn.getAttribute('data-share-index'))];
+          if (f) shareToWhatsApp(f.eventDate || '', f.waktu || '9.00 Pagi - 12.00 Tengah Hari', f.tempat || 'Masjid Al-Muktafi Billah Shah, Ladang', f.liveUrl);
+          return;
+        }
         const metricCard = e.target.closest('[data-metric]');
         if (metricCard) { setInventoryFilter(metricCard.getAttribute('data-metric')); return; }
         const logRow = e.target.closest('[data-log-index]');
