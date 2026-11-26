@@ -98,46 +98,98 @@
   <div id="sidebarBackdrop" onclick="tutupSidebarMobile()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 hidden lg:hidden"></div>
 
   <!-- ===================================================================== -->
-  <!-- SIDEBAR NAVIGASI STATIK                                               -->
+  <!-- MODAL LOG MASUK PENGGUNA                                              -->
   <!-- ===================================================================== -->
-  <aside id="appSidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 shrink-0 bg-forest-900 text-white flex flex-col justify-between transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out">
-    <div class="flex flex-col flex-1 min-h-0">
-      <!-- Brand Header -->
-      <div class="h-16 px-5 flex items-center justify-between border-b border-white/10 shrink-0">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-2xl bg-emerald-400 text-forest-950 flex items-center justify-center font-black text-base shadow-sm">
-            A
-          </div>
+  <div id="loginModal" class="fixed inset-0 z-50 bg-forest-950/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 sm:p-7 shadow-2xl border border-gray-100 space-y-5">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-forest-900 text-emerald-400 flex items-center justify-center font-black text-base shadow-sm">
+          eA
+        </div>
+        <div>
+          <h2 class="text-base font-black text-gray-900 tracking-tight">e-ASTRA Cawangan</h2>
+          <p class="text-[11px] text-gray-500 font-medium">Log masuk menggunakan akaun bertugas anda</p>
+        </div>
+      </div>
+
+      <form onsubmit="kendaliLogMasuk(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">Akaun Petugas / PU</label>
+          <select id="loginUserSelect" onchange="kendaliPilihanUserLogin(this.value)"
+            class="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 bg-gray-50 text-xs font-bold text-gray-900 focus:bg-white focus:border-forest-700 outline-none">
+            <option value="fatin">Fatin (PU Fatin)</option>
+            <option value="fikriyah">Fikriyah (PU Fikriyah)</option>
+            <option value="admin">Pentadbir (Admin)</option>
+            <option value="__custom__">ID Pengguna Lain...</option>
+          </select>
+          <input id="loginCustomIdInput" type="text" placeholder="Masukkan ID pengguna (huruf kecil)"
+            class="hidden mt-2 w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 bg-gray-50 text-xs font-bold text-gray-900 focus:bg-white focus:border-forest-700 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">Kata Laluan / PIN</label>
+          <input id="loginPinInput" type="password" inputmode="numeric" autocomplete="current-password" placeholder="••••"
+            class="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 bg-gray-50 text-sm font-black tracking-widest text-center text-gray-900 focus:bg-white focus:border-forest-700 outline-none" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-1.5 pt-0.5">
+          <button type="button" onclick="tekanPadPin('1')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">1</button>
+          <button type="button" onclick="tekanPadPin('2')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">2</button>
+          <button type="button" onclick="tekanPadPin('3')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">3</button>
+          <button type="button" onclick="tekanPadPin('4')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">4</button>
+          <button type="button" onclick="tekanPadPin('5')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">5</button>
+          <button type="button" onclick="tekanPadPin('6')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">6</button>
+          <button type="button" onclick="tekanPadPin('7')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">7</button>
+          <button type="button" onclick="tekanPadPin('8')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">8</button>
+          <button type="button" onclick="tekanPadPin('9')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">9</button>
+          <button type="button" onclick="padamSemuaPin()" class="py-2 rounded-xl bg-red-50 hover:bg-red-100 text-[11px] font-bold text-red-700">Kosong</button>
+          <button type="button" onclick="tekanPadPin('0')" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-800">0</button>
+          <button type="button" onclick="padamSatuPin()" class="py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-[11px] font-bold text-gray-700">Padam</button>
+        </div>
+
+        <div id="loginErrorMsg" class="hidden p-2.5 rounded-xl bg-red-50 border border-red-200 text-[11px] font-bold text-red-700 text-center"></div>
+
+        <button id="btnSubmitLogin" type="submit"
+          class="w-full py-3 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold shadow-md transition-colors">
+          Sahkan & Masuk Sistem
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- BAR SISI NAVIGASI UTAMA                                               -->
+  <!-- ===================================================================== -->
+  <aside id="appSidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-forest-900 text-white flex flex-col justify-between transition-transform duration-300 -translate-x-full lg:translate-x-0 shrink-0">
+    <div>
+      <div class="h-16 px-5 flex items-center justify-between border-b border-white/10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-400 text-forest-950 flex items-center justify-center font-black text-sm">eA</div>
           <div>
-            <div class="font-black text-sm tracking-tight text-white leading-none">e-ASTRA</div>
-            <div class="text-[10px] font-semibold text-emerald-300/80 mt-0.5 tracking-wide uppercase">Hab Operasi Cawangan</div>
+            <div class="text-sm font-black tracking-tight leading-none">e-ASTRA</div>
+            <div class="text-[10px] text-emerald-300/80 font-semibold mt-0.5">Hab Operasi Terengganu</div>
           </div>
         </div>
-        <button type="button" onclick="tutupSidebarMobile()" class="lg:hidden p-1.5 rounded-xl text-white/70 hover:text-white hover:bg-white/10">
+        <button type="button" onclick="tutupSidebarMobile()" class="lg:hidden p-1.5 rounded-lg text-white/70 hover:text-white">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <!-- Menu Navigasi dengan Pill Bersambung -->
-      <nav id="sidebarNavContainer" class="relative flex-1 py-4 pl-3 pr-0 space-y-1 overflow-y-auto">
-        <!-- Pill Putih Gelongsor -->
-        <div id="navActivePill" class="absolute left-3 right-0 h-11 bg-canvas rounded-l-2xl pointer-events-none z-0 shadow-sm" style="transform: translateY(0px);">
-          <div class="hidden lg:block absolute -top-3 right-0 w-3 h-3 bg-transparent rounded-br-2xl shadow-[4px_4px_0_0_#F2F4F3]"></div>
-          <div class="hidden lg:block absolute -bottom-3 right-0 w-3 h-3 bg-transparent rounded-tr-2xl shadow-[4px_-4px_0_0_#F2F4F3]"></div>
-        </div>
+      <nav class="relative p-4 space-y-1">
+        <div id="navActivePill" class="absolute left-4 right-4 h-10 bg-white rounded-2xl shadow-sm pointer-events-none"></div>
 
         <button type="button" data-module="susulan" onclick="tukarModul('susulan')"
-          class="nav-item-btn active relative z-10 w-full h-11 px-3.5 rounded-l-2xl flex items-center justify-between text-xs font-semibold text-emerald-100/80 hover:text-white transition-colors">
-          <span class="flex items-center gap-3">
-            <i data-lucide="layout-dashboard" class="nav-icon w-4 h-4 text-emerald-300"></i>
-            <span>Susulan &amp; Tugas</span>
+          class="nav-item-btn active relative z-10 w-full h-10 px-3.5 rounded-2xl flex items-center justify-between text-xs font-semibold text-white/80 hover:text-white">
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="check-square" class="nav-icon w-4 h-4 text-emerald-300"></i>
+            <span>Susulan & Tugas</span>
           </span>
           <span id="badgeSusulan" class="nav-badge px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-white/15 text-white">0</span>
         </button>
 
         <button type="button" data-module="leads" onclick="tukarModul('leads')"
-          class="nav-item-btn relative z-10 w-full h-11 px-3.5 rounded-l-2xl flex items-center justify-between text-xs font-semibold text-emerald-100/80 hover:text-white transition-colors">
-          <span class="flex items-center gap-3">
+          class="nav-item-btn relative z-10 w-full h-10 px-3.5 rounded-2xl flex items-center justify-between text-xs font-semibold text-white/80 hover:text-white">
+          <span class="flex items-center gap-2.5">
             <i data-lucide="users" class="nav-icon w-4 h-4 text-emerald-300"></i>
             <span>Prospek (Leads)</span>
           </span>
@@ -145,525 +197,369 @@
         </button>
 
         <button type="button" data-module="jemaah" onclick="tukarModul('jemaah')"
-          class="nav-item-btn relative z-10 w-full h-11 px-3.5 rounded-l-2xl flex items-center justify-between text-xs font-semibold text-emerald-100/80 hover:text-white transition-colors">
-          <span class="flex items-center gap-3">
-            <i data-lucide="folder-check" class="nav-icon w-4 h-4 text-emerald-300"></i>
+          class="nav-item-btn relative z-10 w-full h-10 px-3.5 rounded-2xl flex items-center justify-between text-xs font-semibold text-white/80 hover:text-white">
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="plane" class="nav-icon w-4 h-4 text-emerald-300"></i>
             <span>Direktori Jemaah</span>
           </span>
           <span id="badgeJemaah" class="nav-badge px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-white/15 text-white">0</span>
         </button>
 
         <button type="button" data-module="kursus" onclick="tukarModul('kursus')"
-          class="nav-item-btn relative z-10 w-full h-11 px-3.5 rounded-l-2xl flex items-center justify-between text-xs font-semibold text-emerald-100/80 hover:text-white transition-colors">
-          <span class="flex items-center gap-3">
-            <i data-lucide="calendar-plus" class="nav-icon w-4 h-4 text-emerald-300"></i>
+          class="nav-item-btn relative z-10 w-full h-10 px-3.5 rounded-2xl flex items-center justify-between text-xs font-semibold text-white/80 hover:text-white">
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="book-open" class="nav-icon w-4 h-4 text-emerald-300"></i>
             <span>Kursus Umrah</span>
           </span>
         </button>
 
         <button type="button" data-module="stok" onclick="tukarModul('stok')"
-          class="nav-item-btn relative z-10 w-full h-11 px-3.5 rounded-l-2xl flex items-center justify-between text-xs font-semibold text-emerald-100/80 hover:text-white transition-colors">
-          <span class="flex items-center gap-3">
+          class="nav-item-btn relative z-10 w-full h-10 px-3.5 rounded-2xl flex items-center justify-between text-xs font-semibold text-white/80 hover:text-white">
+          <span class="flex items-center gap-2.5">
             <i data-lucide="package" class="nav-icon w-4 h-4 text-emerald-300"></i>
-            <span>Stok &amp; Inventori</span>
+            <span>Stok & Inventori</span>
           </span>
         </button>
 
-        <!-- Khas untuk Pentadbir (Admin) sahaja -->
-        <button type="button" data-module="tetapan" id="navBtnTetapan" onclick="tukarModul('tetapan')"
-          class="nav-item-btn hidden relative z-10 w-full h-11 px-3.5 rounded-l-2xl flex items-center justify-between text-xs font-semibold text-emerald-100/80 hover:text-white transition-colors">
-          <span class="flex items-center gap-3">
-            <i data-lucide="settings" class="nav-icon w-4 h-4 text-emerald-300"></i>
-            <span>Tetapan &amp; Admin</span>
+        <button id="navBtnTetapan" type="button" data-module="tetapan" onclick="tukarModul('tetapan')"
+          class="nav-item-btn hidden relative z-10 w-full h-10 px-3.5 rounded-2xl flex items-center justify-between text-xs font-semibold text-white/80 hover:text-white">
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="shield-check" class="nav-icon w-4 h-4 text-emerald-300"></i>
+            <span>Tetapan & Admin</span>
           </span>
         </button>
       </nav>
     </div>
 
-    <!-- Profil Pengguna Bawah Sidebar -->
-    <div class="p-3.5 border-t border-white/10 shrink-0 space-y-2">
-      <div class="bg-forest-850/90 rounded-2xl p-3 flex items-center justify-between gap-2 border border-white/5">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <div id="sidebarAvatar" class="w-8 h-8 rounded-xl bg-emerald-400/20 text-emerald-300 font-extrabold text-xs flex items-center justify-center shrink-0">
-            ST
-          </div>
-          <div class="min-w-0">
-            <div id="sidebarUserName" class="text-xs font-bold text-white truncate">Staf Cawangan</div>
-            <div id="sidebarUserRole" class="text-[10px] text-emerald-300/70 truncate">Sila Log Masuk</div>
-          </div>
+    <div class="p-4 border-t border-white/10 space-y-3">
+      <div class="flex items-center gap-2.5 bg-white/5 p-2.5 rounded-2xl">
+        <div id="sidebarAvatar" class="w-9 h-9 rounded-xl bg-emerald-400/20 text-emerald-300 font-black text-xs flex items-center justify-center shrink-0">ST</div>
+        <div class="min-w-0">
+          <div id="sidebarUserName" class="text-xs font-bold text-white truncate">Staf Cawangan</div>
+          <div id="sidebarUserRole" class="text-[10px] text-emerald-300/80 truncate">Sila Log Masuk</div>
         </div>
-        <button type="button" onclick="kendaliLogKeluar()" title="Log Keluar"
-          class="p-2 rounded-xl bg-white/5 hover:bg-red-500/20 text-emerald-200 hover:text-red-300 transition-colors shrink-0">
-          <i data-lucide="log-out" class="w-4 h-4"></i>
-        </button>
       </div>
+      <button type="button" onclick="kendaliLogKeluar()"
+        class="w-full py-2 px-3 rounded-xl bg-white/10 hover:bg-red-500/20 text-white/90 hover:text-red-200 text-xs font-bold flex items-center justify-center gap-2 transition-colors">
+        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+        <span>Log Keluar</span>
+      </button>
     </div>
   </aside>
 
   <!-- ===================================================================== -->
-  <!-- KANDUNGAN UTAMA APLIKASI (HEADER STATIK + PANEL MODUL BEBAS SKROL)    -->
+  <!-- RUANG KERJA UTAMA                                                     -->
   <!-- ===================================================================== -->
-  <main class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-canvas">
-
-    <!-- Header Atas Statik -->
-    <header class="h-16 px-4 sm:px-6 bg-white border-b border-gray-200/80 flex items-center justify-between gap-3 shrink-0 z-20">
-      <div class="flex items-center gap-3 min-w-0">
-        <button type="button" onclick="bukaSidebarMobile()" class="lg:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100">
-          <i data-lucide="menu" class="w-5 h-5"></i>
+  <div class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+    <!-- Top Header -->
+    <header class="h-16 bg-white border-b border-gray-200/80 px-4 sm:px-6 flex items-center justify-between gap-3 shrink-0">
+      <div class="flex items-center gap-3 flex-1 max-w-md">
+        <button type="button" onclick="bukaSidebarMobile()" class="lg:hidden p-2 rounded-xl bg-gray-100 text-gray-700">
+          <i data-lucide="menu" class="w-4 h-4"></i>
         </button>
-        <div class="relative w-56 sm:w-80">
-          <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-          <input type="text" oninput="kendaliCarianGlobal(this.value)" placeholder="Cari prospek, jemaah atau stok..."
-            class="w-full pl-9 pr-3.5 py-2 rounded-2xl bg-gray-100/80 focus:bg-white border border-transparent focus:border-forest-700 text-xs outline-none transition-all" />
+        <div class="relative flex-1">
+          <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input type="text" oninput="kendaliCarianGlobal(this.value)" placeholder="Cari prospek, nama jemaah, No. KP atau SKU..."
+            class="w-full pl-9 pr-4 py-2 rounded-2xl bg-gray-100/80 border border-transparent focus:bg-white focus:border-forest-700 text-xs font-medium outline-none transition-colors" />
         </div>
       </div>
-
-      <div class="flex items-center gap-2 shrink-0">
+      <div class="flex items-center gap-2">
         <button type="button" onclick="muatSemulaSemuaData()"
-          class="px-3.5 py-2 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold inline-flex items-center gap-1.5 transition-colors">
+          class="px-3.5 py-2 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold flex items-center gap-1.5 transition-colors">
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Muat Semula</span>
         </button>
         <button type="button" onclick="bukaModalLead()"
-          class="px-3.5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold inline-flex items-center gap-1.5 shadow-sm transition-colors">
+          class="px-3.5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition-colors">
           <i data-lucide="plus" class="w-3.5 h-3.5"></i>
           <span>Prospek Baharu</span>
         </button>
       </div>
     </header>
 
-    <!-- =================================================================== -->
-    <!-- MODUL 1: SUSULAN & TUGAS                                            -->
-    <!-- =================================================================== -->
-    <section id="module-susulan" class="module-panel flex-1 flex flex-col min-h-0 p-4 sm:p-6 gap-4 overflow-hidden">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-        <div>
-          <h1 class="text-base sm:text-lg font-black text-gray-900 tracking-tight">Papan Pemuka Susulan &amp; Tugas</h1>
-          <p id="susulanSubtitle" class="text-xs text-gray-500 mt-0.5">Menyegerakkan senarai tugasan &amp; susulan hari ini...</p>
-        </div>
-        <div class="inline-flex bg-white p-1 rounded-2xl border border-gray-200/80 self-start">
-          <button id="tabSusulanSemua" type="button" onclick="setSusulanTab('semua')"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-forest-900 text-white transition-colors">Semua Aktif</button>
-          <button id="tabSusulanTertunggak" type="button" onclick="setSusulanTab('tertunggak')"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900 transition-colors">Tertunggak</button>
-          <button id="tabSusulanJemaah" type="button" onclick="setSusulanTab('jemaah')"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900 transition-colors">Kelengkapan Jemaah</button>
-        </div>
-      </div>
+    <!-- Main Modules Area -->
+    <main class="flex-1 overflow-hidden p-4 sm:p-6">
 
-      <!-- Kad Statistik Ringkas -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">
-        <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
-          <div class="text-[11px] font-bold text-gray-500">Prospek Baharu</div>
-          <div id="statTypeBaru" class="text-xl font-black text-gray-900 mt-1">0</div>
-        </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
-          <div class="text-[11px] font-bold text-gray-500">Sedang Dihubungi</div>
-          <div id="statTypeDihubungi" class="text-xl font-black text-forest-800 mt-1">0</div>
-        </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
-          <div class="text-[11px] font-bold text-gray-500">Berjaya Ditutup</div>
-          <div id="statTypeBerjaya" class="text-xl font-black text-emerald-700 mt-1">0</div>
-        </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
-          <div class="text-[11px] font-bold text-gray-500">Jemaah Berdaftar</div>
-          <div id="statTypeJemaah" class="text-xl font-black text-gray-900 mt-1">0</div>
-        </div>
-      </div>
-
-      <!-- Grid Kandungan: Senarai Tugas Bebas Skrol + Panel Kanan Statik -->
-      <div class="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4 overflow-hidden">
-        <div id="susulanScrollContainer" onscroll="kendaliScrollContainer('susulan', this)"
-          class="lg:col-span-2 independent-data-scroll pr-1 space-y-2.5">
-          <div id="susulanTaskList" class="space-y-2.5"></div>
-          <div id="susulanScrollLoader" class="py-3 text-center text-[11px] font-semibold text-gray-400"></div>
-        </div>
-
-        <div class="hidden lg:flex flex-col gap-4 overflow-y-auto pr-1">
-          <!-- Kad Tindakan Seterusnya -->
-          <div class="bg-forest-900 text-white p-5 rounded-3xl space-y-3 shadow-sm">
-            <div class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-300">Tindakan Seterusnya</div>
-            <div id="upNextTitle" class="text-sm font-black">Memuatkan...</div>
-            <div id="upNextDetail" class="text-xs text-emerald-100/80">Sila tunggu sebentar.</div>
-            <div id="upNextActions" class="flex items-center gap-2 pt-1"></div>
+      <!-- MODUL 1: SUSULAN & TUGAS -->
+      <section id="module-susulan" class="module-panel h-full flex flex-col gap-4 overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 shrink-0">
+          <div>
+            <h1 class="text-lg font-black text-gray-900 tracking-tight">Susulan & Tugas Harian</h1>
+            <p id="susulanSubtitle" class="text-xs text-gray-500">Menyegerakkan senarai tugasan...</p>
           </div>
+          <div class="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-gray-200/80">
+            <button id="tabSusulanSemua" type="button" onclick="setSusulanTab('semua')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-forest-900 text-white">Semua Aktif</button>
+            <button id="tabSusulanTertunggak" type="button" onclick="setSusulanTab('tertunggak')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900">Tertunggak</button>
+            <button id="tabSusulanJemaah" type="button" onclick="setSusulanTab('jemaah')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900">Kelengkapan Jemaah</button>
+          </div>
+        </div>
 
-          <!-- Kad Kemajuan & Baki Stok -->
-          <div class="bg-white p-4 rounded-3xl border border-gray-200/80 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-extrabold text-gray-900">Kadar Penutupan</span>
-              <span id="dailyProgressPercent" class="text-xs font-black text-forest-800">0%</span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0">
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
+            <div class="text-[11px] font-bold text-gray-400">Prospek Baru</div>
+            <div id="statTypeBaru" class="text-xl font-black text-gray-900 mt-0.5">0</div>
+          </div>
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
+            <div class="text-[11px] font-bold text-gray-400">Dalam Susulan</div>
+            <div id="statTypeDihubungi" class="text-xl font-black text-amber-600 mt-0.5">0</div>
+          </div>
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
+            <div class="text-[11px] font-bold text-gray-400">Prospek Berjaya</div>
+            <div id="statTypeBerjaya" class="text-xl font-black text-emerald-700 mt-0.5">0</div>
+          </div>
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
+            <div class="text-[11px] font-bold text-gray-400">Jemaah Berdaftar</div>
+            <div id="statTypeJemaah" class="text-xl font-black text-forest-900 mt-0.5">0</div>
+          </div>
+        </div>
+
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0 overflow-hidden">
+          <div id="susulanTaskList" onscroll="kendaliScrollContainer(this, 'susulan')" class="lg:col-span-2 independent-data-scroll pr-1 space-y-2.5"></div>
+
+          <div class="independent-data-scroll space-y-3">
+            <div class="bg-forest-900 text-white p-5 rounded-3xl space-y-3">
+              <div class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-300">Tindakan Seterusnya</div>
+              <div id="upNextTitle" class="text-sm font-black">Memuatkan...</div>
+              <div id="upNextDetail" class="text-xs text-white/75">Sila tunggu sebentar.</div>
+              <div id="upNextActions" class="pt-1"></div>
             </div>
-            <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-              <svg class="w-full h-2" viewBox="0 0 100 4" preserveAspectRatio="none">
-                <path id="dailyProgressRing" d="M0 2 H100" stroke="#0F4C36" stroke-width="4" stroke-dasharray="0, 100" fill="none" />
-              </svg>
+
+            <div class="bg-white p-4 rounded-3xl border border-gray-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-gray-900">Kadar Penutupan</span>
+                <span id="dailyProgressPercent" class="text-xs font-black text-forest-800">0%</span>
+              </div>
+              <p id="dailyProgressDesc" class="text-[11px] text-gray-500">0 daripada 0 prospek berjaya ditutup</p>
             </div>
-            <p id="dailyProgressDesc" class="text-[11px] text-gray-500">0 daripada 0 prospek berjaya ditutup</p>
-          </div>
 
-          <div class="bg-white p-4 rounded-3xl border border-gray-200/80 space-y-2">
-            <div class="flex items-center justify-between pb-1">
-              <span class="text-xs font-extrabold text-gray-900">Ringkasan Baki Stok</span>
-              <button type="button" onclick="tukarModul('stok')" class="text-[11px] font-bold text-forest-800 hover:underline">Lihat Semua</button>
+            <div class="bg-white p-4 rounded-3xl border border-gray-200/80 space-y-2">
+              <div class="text-xs font-black text-gray-900">Ringkasan Baki Stok</div>
+              <div id="dashboardStokSummaryList" class="text-xs"></div>
             </div>
-            <div id="dashboardStokSummaryList" class="text-xs space-y-1"></div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- =================================================================== -->
-    <!-- MODUL 2: PROSPEK (LEADS)                                            -->
-    <!-- =================================================================== -->
-    <section id="module-leads" class="module-panel hidden flex-1 flex flex-col min-h-0 p-4 sm:p-6 gap-4 overflow-hidden">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-        <div>
-          <h1 class="text-base sm:text-lg font-black text-gray-900 tracking-tight">Direktori Prospek (Leads)</h1>
-          <p id="leadsCountLabel" class="text-xs text-gray-500 mt-0.5">Memuatkan senarai prospek...</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <input id="filterLeadSearch" type="text" oninput="appState.leadsLimit=15; renderLeadsTable()" placeholder="Cari nama / tel..."
-            class="px-3.5 py-2 rounded-2xl bg-white border border-gray-200 text-xs outline-none focus:border-forest-700" />
-          <select id="filterLeadPeringkat" onchange="appState.leadsLimit=15; renderLeadsTable()"
-            class="px-3 py-2 rounded-2xl bg-white border border-gray-200 text-xs font-semibold outline-none">
-            <option value="">Semua Peringkat</option>
-            <option value="Baru">Baru</option>
-            <option value="Dihubungi">Dihubungi</option>
-            <option value="Berjaya">Berjaya</option>
-            <option value="Tolak">Tolak</option>
-          </select>
-          <select id="filterLeadSumber" onchange="appState.leadsLimit=15; renderLeadsTable()"
-            class="px-3 py-2 rounded-2xl bg-white border border-gray-200 text-xs font-semibold outline-none">
-            <option value="">Semua Sumber</option>
-            <option value="WhatsApp">WhatsApp</option>
-            <option value="Facebook">Facebook</option>
-            <option value="Instagram">Instagram</option>
-            <option value="TikTok">TikTok</option>
-            <option value="Walk-in">Walk-in</option>
-            <option value="Rujukan">Rujukan</option>
-          </select>
-          <button type="button" onclick="bukaModalImport()"
-            class="px-3.5 py-2 rounded-2xl bg-white hover:bg-gray-50 border border-gray-200 text-gray-800 text-xs font-bold inline-flex items-center gap-1.5">
-            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import Pukal
-          </button>
-          <button type="button" onclick="bukaModalLead()"
-            class="px-4 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold inline-flex items-center gap-1.5">
-            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Tambah Prospek
-          </button>
-        </div>
-      </div>
-
-      <div id="leadsScrollContainer" onscroll="kendaliScrollContainer('leads', this)"
-        class="flex-1 min-h-0 independent-data-scroll bg-white rounded-3xl border border-gray-200/80">
-        <table class="w-full text-left border-collapse text-xs">
-          <thead class="sticky top-0 z-10 bg-gray-50 border-b border-gray-200/80 text-[11px] font-extrabold text-gray-600 uppercase">
-            <tr>
-              <th class="py-3 px-4">Prospek</th>
-              <th class="py-3 px-4">Pakej &amp; Pax</th>
-              <th class="py-3 px-4">Sumber &amp; PIC</th>
-              <th class="py-3 px-4">Peringkat</th>
-              <th class="py-3 px-4">Susulan</th>
-              <th class="py-3 px-4 text-right">Tindakan</th>
-            </tr>
-          </thead>
-          <tbody id="leadsTableBody" class="divide-y divide-gray-100"></tbody>
-        </table>
-        <div id="leadsScrollLoader" class="py-3 text-center text-[11px] font-semibold text-gray-400"></div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- MODUL 3: DIREKTORI JEMAAH                                           -->
-    <!-- =================================================================== -->
-    <section id="module-jemaah" class="module-panel hidden flex-1 flex flex-col min-h-0 p-4 sm:p-6 gap-4 overflow-hidden">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-        <div>
-          <h1 class="text-base sm:text-lg font-black text-gray-900 tracking-tight">Direktori Jemaah Umrah</h1>
-          <p id="jemaahCountLabel" class="text-xs text-gray-500 mt-0.5">Memuatkan rekod jemaah...</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <input id="filterJemaahSearch" type="text" oninput="appState.jemaahLimit=10; renderJemaahList()" placeholder="Cari nama / No. KP / PU..."
-            class="px-3.5 py-2 rounded-2xl bg-white border border-gray-200 text-xs outline-none focus:border-forest-700" />
-          <button type="button" onclick="bukaModalJemaahBaru()"
-            class="px-4 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold inline-flex items-center gap-1.5">
-            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Daftar Jemaah
-          </button>
-        </div>
-      </div>
-
-      <div id="jemaahScrollContainer" onscroll="kendaliScrollContainer('jemaah', this)"
-        class="flex-1 min-h-0 independent-data-scroll pr-1">
-        <div id="jemaahCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-        <div id="jemaahScrollLoader" class="py-3 text-center text-[11px] font-semibold text-gray-400"></div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- MODUL 4: KURSUS UMRAH TERBUKA                                       -->
-    <!-- =================================================================== -->
-    <section id="module-kursus" class="module-panel hidden flex-1 flex flex-col min-h-0 p-4 sm:p-6 gap-4 overflow-hidden">
-      <div class="flex items-center justify-between shrink-0">
-        <div>
-          <h1 class="text-base sm:text-lg font-black text-gray-900 tracking-tight">Penjana Borang Kursus Umrah</h1>
-          <p class="text-xs text-gray-500 mt-0.5">Duplikasi borang pendaftaran automatik ke Google Drive cawangan</p>
-        </div>
-        <button type="button" onclick="muatSenaraiKursus()"
-          class="px-3.5 py-2 rounded-2xl bg-white hover:bg-gray-50 border border-gray-200 text-gray-800 text-xs font-bold inline-flex items-center gap-1.5">
-          <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i> Segarkan Arkib
-        </button>
-      </div>
-
-      <div class="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4 overflow-hidden">
-        <form onsubmit="janaBorangKursus(event)" class="bg-white p-5 rounded-3xl border border-gray-200/80 space-y-3 overflow-y-auto">
-          <h2 class="text-xs font-black text-gray-900 uppercase tracking-wide">Bina Borang Baharu</h2>
+      <!-- MODUL 2: PROSPEK (LEADS) -->
+      <section id="module-leads" class="module-panel hidden h-full flex flex-col gap-4 overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 shrink-0">
           <div>
-            <label class="block text-[11px] font-bold text-gray-600 mb-1">Tarikh Kursus *</label>
-            <input id="kursusTarikh" type="text" required placeholder="SABTU, 14 DISEMBER 2026"
-              class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+            <h1 class="text-lg font-black text-gray-900 tracking-tight">Pengurusan Prospek (Leads)</h1>
+            <p id="leadsCountLabel" class="text-xs text-gray-500">Memuatkan rekod prospek...</p>
           </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <input id="filterLeadSearch" type="text" oninput="renderLeadsTable()" placeholder="Cari nama / telefon..."
+              class="px-3 py-1.5 rounded-xl bg-white border border-gray-200 text-xs font-medium outline-none" />
+            <select id="filterLeadPeringkat" onchange="renderLeadsTable()" class="px-3 py-1.5 rounded-xl bg-white border border-gray-200 text-xs font-bold">
+              <option value="">Semua Status</option>
+              <option value="Baru">Baru</option>
+              <option value="Dihubungi">Dihubungi</option>
+              <option value="Berjaya">Berjaya</option>
+              <option value="Tolak">Tolak</option>
+            </select>
+            <select id="filterLeadSumber" onchange="renderLeadsTable()" class="px-3 py-1.5 rounded-xl bg-white border border-gray-200 text-xs font-bold">
+              <option value="">Semua Sumber</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Facebook">Facebook</option>
+              <option value="TikTok">TikTok</option>
+              <option value="Walk-in">Walk-in</option>
+              <option value="Rujukan">Rujukan</option>
+            </select>
+            <button type="button" onclick="bukaModalImport()" class="px-3 py-1.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-xs font-bold">Import Pukal</button>
+          </div>
+        </div>
+
+        <div class="flex-1 bg-white rounded-3xl border border-gray-200/80 overflow-hidden flex flex-col">
+          <div onscroll="kendaliScrollContainer(this, 'leads')" class="flex-1 independent-data-scroll">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-gray-50 sticky top-0 z-10 border-b border-gray-200/80 text-[10px] font-extrabold uppercase text-gray-500">
+                <tr>
+                  <th class="py-3 px-4">Prospek</th>
+                  <th class="py-3 px-4">Pakej & Pax</th>
+                  <th class="py-3 px-4">Sumber / PU</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4">Susulan</th>
+                  <th class="py-3 px-4 text-right">Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody" class="divide-y divide-gray-100 text-xs"></tbody>
+            </table>
+          </div>
+        <div id="jemaahCardsGrid" onscroll="kendaliScrollContainer(this, 'jemaah')" class="flex-1 independent-data-scroll grid grid-cols-1 md:grid-cols-2 gap-3 content-start pr-1"></div>
+      </section>
+
+      <!-- MODUL 3: DIREKTORI JEMAAH -->
+      <section id="module-jemaah" class="module-panel hidden h-full flex flex-col gap-4 overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 shrink-0">
           <div>
-            <label class="block text-[11px] font-bold text-gray-600 mb-1">Label Bulan (Tajuk Fail)</label>
-            <input id="kursusBulan" type="text" placeholder="DISEMBER 2026"
-              class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+            <h1 class="text-lg font-black text-gray-900 tracking-tight">Direktori Jemaah Umrah</h1>
+            <p id="jemaahCountLabel" class="text-xs text-gray-500">Menunjukkan rekod jemaah...</p>
           </div>
+          <div class="flex items-center gap-2">
+            <input id="filterJemaahSearch" type="text" oninput="renderJemaahList()" placeholder="Cari nama, No. KP atau PU..."
+              class="px-3.5 py-2 rounded-2xl bg-white border border-gray-200 text-xs font-medium outline-none" />
+            <button type="button" onclick="bukaModalJemaahBaru()"
+              class="px-4 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">
+              + Daftar Jemaah
+            </button>
+          </div>
+        </div>
+        <div id="jemaahCardsGrid" class="flex-1 independent-data-scroll grid grid-cols-1 md:grid-cols-2 gap-3 content-start pr-1"></div>
+      </section>
+
+      <!-- MODUL 4: KURSUS UMRAH -->
+      <section id="module-kursus" class="module-panel hidden h-full flex flex-col gap-4 overflow-hidden">
+        <div class="shrink-0">
+          <h1 class="text-lg font-black text-gray-900 tracking-tight">Penjana Borang Kursus Umrah</h1>
+          <p class="text-xs text-gray-500">Jana Google Form pendaftaran kursus secara automatik beserta poster terkini</p>
+        </div>
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0 overflow-hidden">
+          <form onsubmit="janaBorangKursus(event)" class="bg-white p-5 rounded-3xl border border-gray-200/80 space-y-3 independent-data-scroll">
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 mb-1">Tarikh Kursus</label>
+              <input id="kursusTarikh" type="text" required placeholder="Contoh: SABTU, 14 DISEMBER 2026" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 mb-1">Bulan / Sesi</label>
+              <input id="kursusBulan" type="text" required placeholder="Contoh: DISEMBER 2026" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 mb-1">Waktu</label>
+              <input id="kursusWaktu" type="text" value="9.00 PAGI - 12.00 TENGAHARI" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 mb-1">Tempat</label>
+              <input id="kursusTempat" type="text" required placeholder="Pejabat Azzuha Cawangan Terengganu" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Telefon Pertanyaan</label>
+              <input id="kursusNoTel" type="text" value="011-5508 3367" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-600 mb-1">Poster Kursus (Pilihan)</label>
+              <input id="kursusPosterFile" type="file" accept="image/*" class="w-full text-xs text-gray-500" />
+            </div>
+            <button id="btnJanaKursus" type="submit" class="w-full py-2.5 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">
+              Jana Google Form Sekarang
+            </button>
+          </form>
+          <div id="kursusArchiveList" class="lg:col-span-2 independent-data-scroll space-y-2.5 pr-1"></div>
+        </div>
+      </section>
+
+      <!-- MODUL 5: STOK & INVENTORI -->
+      <section id="module-stok" class="module-panel hidden h-full flex flex-col gap-4 overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 shrink-0">
           <div>
-            <label class="block text-[11px] font-bold text-gray-600 mb-1">Waktu Kursus</label>
-            <input id="kursusWaktu" type="text" value="9.00 PAGI - 12.00 TENGAHARI"
-              class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+            <h1 class="text-lg font-black text-gray-900 tracking-tight">Stok & Inventori Kelengkapan</h1>
+            <p id="stokCountLabel" class="text-xs text-gray-500">Memuatkan item inventori...</p>
           </div>
-          <div>
-            <label class="block text-[11px] font-bold text-gray-600 mb-1">Tempat / Lokasi *</label>
-            <input id="kursusTempat" type="text" required placeholder="PEJABAT AZZUHA TERENGGANU"
-              class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <div class="flex flex-wrap items-center gap-2">
+            <input id="filterStokSearch" type="text" oninput="renderStokGrid()" placeholder="Cari SKU / item..."
+              class="px-3 py-1.5 rounded-xl bg-white border border-gray-200 text-xs font-medium outline-none" />
+            <div class="flex bg-white p-1 rounded-xl border border-gray-200">
+              <button type="button" data-stok-filter="ALL" onclick="setStokFilter('ALL')" class="stok-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-forest-900 text-white">Semua</button>
+              <button type="button" data-stok-filter="OK" onclick="setStokFilter('OK')" class="stok-filter-btn px-3 py-1 rounded-lg text-xs font-bold text-gray-600">Mencukupi</button>
+              <button type="button" data-stok-filter="LOW" onclick="setStokFilter('LOW')" class="stok-filter-btn px-3 py-1 rounded-lg text-xs font-bold text-gray-600">Stok Rendah</button>
+            </div>
+            <button type="button" onclick="bukaModalTransaksiStok()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold">+ Keluar / Masuk</button>
+            <button type="button" onclick="bukaModalItemStok()" class="px-3.5 py-1.5 rounded-xl bg-forest-900 text-white text-xs font-bold">+ Item Baharu</button>
           </div>
-          <div>
-            <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Telefon Pertanyaan</label>
-            <input id="kursusNoTel" type="text" value="011-5508 3367"
-              class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0">
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
+            <div class="text-[11px] font-bold text-gray-400">Jumlah SKU</div>
+            <div id="kpiStokSku" class="text-xl font-black text-gray-900 mt-0.5">0</div>
           </div>
-          <div>
-            <label class="block text-[11px] font-bold text-gray-600 mb-1">Poster Kursus (Pilihan)</label>
-            <input id="kursusPosterFile" type="file" accept="image/*" class="w-full text-[11px]" />
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
+            <div class="text-[11px] font-bold text-gray-400">Jumlah Unit</div>
+            <div id="kpiStokTotalUnit" class="text-xl font-black text-forest-900 mt-0.5">0</div>
           </div>
-          <button id="btnJanaKursus" type="submit"
-            class="w-full py-2.5 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold shadow-sm">
-            Jana Google Form Sekarang
-          </button>
-        </form>
-
-        <div class="lg:col-span-2 independent-data-scroll pr-1 space-y-2.5">
-          <div id="kursusArchiveList" class="space-y-2.5"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- MODUL 5: STOK & INVENTORI                                           -->
-    <!-- =================================================================== -->
-    <section id="module-stok" class="module-panel hidden flex-1 flex flex-col min-h-0 p-4 sm:p-6 gap-4 overflow-hidden">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-        <div>
-          <h1 class="text-base sm:text-lg font-black text-gray-900 tracking-tight">Kawalan Stok &amp; Inventori</h1>
-          <p id="stokCountLabel" class="text-xs text-gray-500 mt-0.5">Memuatkan inventori...</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <input id="filterStokSearch" type="text" oninput="appState.stokLimit=10; renderStokGrid()" placeholder="Cari item / SKU..."
-            class="px-3.5 py-2 rounded-2xl bg-white border border-gray-200 text-xs outline-none focus:border-forest-700" />
-          <div class="inline-flex bg-white p-1 rounded-2xl border border-gray-200/80">
-            <button type="button" data-stok-filter="ALL" onclick="setStokFilter('ALL')"
-              class="stok-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-forest-900 text-white">Semua</button>
-            <button type="button" data-stok-filter="OK" onclick="setStokFilter('OK')"
-              class="stok-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900">Mencukupi</button>
-            <button type="button" data-stok-filter="LOW" onclick="setStokFilter('LOW')"
-              class="stok-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-600 hover:text-gray-900">Stok Rendah</button>
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
+            <div class="text-[11px] font-bold text-gray-400">Status OK</div>
+            <div id="kpiStokOk" class="text-xl font-black text-emerald-700 mt-0.5">0</div>
           </div>
-          <button type="button" onclick="bukaModalTransaksiStok()"
-            class="px-3.5 py-2 rounded-2xl bg-white hover:bg-gray-50 border border-gray-200 text-gray-800 text-xs font-bold">
-            ± Rekod Keluar/Masuk
-          </button>
-          <button type="button" onclick="bukaModalItemStok()"
-            class="px-4 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold inline-flex items-center gap-1.5">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Item Baharu
-          </button>
-        </div>
-      </div>
-
-      <!-- 4 Kad KPI Stok -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">
-        <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
-          <div class="text-[11px] font-bold text-gray-500">Jumlah Jenis SKU</div>
-          <div id="kpiStokSku" class="text-xl font-black text-gray-900 mt-1">0</div>
-        </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
-          <div class="text-[11px] font-bold text-gray-500">Jumlah Baki Unit</div>
-          <div id="kpiStokTotalUnit" class="text-xl font-black text-forest-800 mt-1">0</div>
-        </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
-          <div class="text-[11px] font-bold text-gray-500">Status Mencukupi (OK)</div>
-          <div id="kpiStokOk" class="text-xl font-black text-emerald-700 mt-1">0</div>
-        </div>
-        <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
-          <div class="text-[11px] font-bold text-gray-500">Perlu Tambah Stok</div>
-          <div id="kpiStokLow" class="text-xl font-black text-amber-600 mt-1">0</div>
-        </div>
-      </div>
-
-      <!-- Grid 1 Lajur Inventori Bebas Skrol + Log Pergerakan -->
-      <div class="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4 overflow-hidden">
-        <div id="stokScrollContainer" onscroll="kendaliScrollContainer('stok', this)"
-          class="lg:col-span-2 independent-data-scroll pr-1 space-y-2.5">
-          <div id="stokSingleColList" class="grid grid-cols-1 gap-2.5"></div>
-          <div id="stokScrollLoader" class="py-3 text-center text-[11px] font-semibold text-gray-400"></div>
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-200/80">
+            <div class="text-[11px] font-bold text-gray-400">Stok Rendah / Habis</div>
+            <div id="kpiStokLow" class="text-xl font-black text-amber-600 mt-0.5">0</div>
+          </div>
         </div>
 
-        <div class="bg-white p-4 rounded-3xl border border-gray-200/80 flex flex-col min-h-0 overflow-hidden">
-          <div class="text-xs font-extrabold text-gray-900 pb-2 border-b border-gray-100 shrink-0">Pergerakan Stok Terkini</div>
-          <div id="stokLogsList" class="flex-1 independent-data-scroll divide-y divide-gray-100 text-xs mt-1 pr-1"></div>
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0 overflow-hidden">
+          <div id="stokSingleColList" onscroll="kendaliScrollContainer(this, 'stok')" class="lg:col-span-2 independent-data-scroll space-y-2.5 pr-1"></div>
+          <div class="bg-white p-4 rounded-3xl border border-gray-200/80 flex flex-col overflow-hidden">
+            <div class="text-xs font-black text-gray-900 pb-2 border-b border-gray-100 shrink-0">Sejarah Transaksi Terkini</div>
+            <div id="stokLogsList" class="flex-1 independent-data-scroll divide-y divide-gray-100 text-xs"></div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- =================================================================== -->
-    <!-- MODUL 6: TETAPAN & PENTADBIR (KHAS UNTUK ADMIN SAHAJA)              -->
-    <!-- =================================================================== -->
-    <section id="module-tetapan" class="module-panel hidden flex-1 flex flex-col min-h-0 p-4 sm:p-6 gap-4 overflow-hidden">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-        <div>
-          <h1 class="text-base sm:text-lg font-black text-gray-900 tracking-tight">Tetapan Sistem &amp; Pentadbir</h1>
-          <p class="text-xs text-gray-500 mt-0.5">Pengurusan templat mesej WhatsApp, senarai pakej umrah, akaun &amp; log aktiviti</p>
-        </div>
-        <div class="inline-flex bg-white p-1 rounded-2xl border border-gray-200/80 self-start">
-          <button type="button" data-admin-tab="templat" onclick="setAdminTab('templat')"
-            class="admin-tab-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-forest-900 text-white">Templat WhatsApp</button>
-          <button type="button" data-admin-tab="pakej" onclick="setAdminTab('pakej')"
-            class="admin-tab-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-600">Senarai Pakej</button>
-          <button type="button" data-admin-tab="pengguna" onclick="setAdminTab('pengguna')"
-            class="admin-tab-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-600">Pengguna &amp; Audit</button>
-        </div>
-      </div>
-
-      <div class="flex-1 min-h-0 independent-data-scroll pr-1">
-        <!-- Subpanel Templat WhatsApp -->
-        <div id="adminPanel-templat" class="admin-subpanel">
-          <div id="waTemplatList" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+      <!-- MODUL 6: TETAPAN & ADMIN (PENTADBIR SAHAJA) -->
+      <section id="module-tetapan" class="module-panel hidden h-full flex flex-col gap-4 overflow-hidden">
+        <div class="shrink-0">
+          <h1 class="text-lg font-black text-gray-900 tracking-tight">Tetapan Sistem & Pentadbir</h1>
+          <p class="text-xs text-gray-500">Pengurusan akaun petugas, log aktiviti sistem, templat WhatsApp & pakej umrah</p>
         </div>
 
-        <!-- Subpanel Pakej -->
-        <div id="adminPanel-pakej" class="admin-subpanel hidden">
-          <div id="adminPakejList" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-        </div>
-
-        <!-- Subpanel Pengguna & Audit -->
-        <div id="adminPanel-pengguna" class="admin-subpanel hidden grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div class="bg-white p-5 rounded-3xl border border-gray-200/80 space-y-3">
-            <div class="flex items-center justify-between">
-              <h2 class="text-xs font-black text-gray-900 uppercase">Akaun Petugas &amp; Pentadbir</h2>
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0 overflow-hidden">
+          <div class="bg-white p-5 rounded-3xl border border-gray-200/80 flex flex-col overflow-hidden">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-100 shrink-0">
+              <div class="text-xs font-black uppercase tracking-wider text-gray-700">Akaun Petugas & Pentadbir</div>
               <button type="button" onclick="bukaModalPengguna()"
-                class="px-3 py-1.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-[11px] font-extrabold inline-flex items-center gap-1">
-                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Tambah Pengguna
+                class="px-3 py-1.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-[11px] font-bold">
+                + Tambah Pengguna
               </button>
             </div>
-            <div id="adminPenggunaList" class="divide-y divide-gray-100 text-xs"></div>
+            <div id="adminPenggunaList" class="flex-1 independent-data-scroll divide-y divide-gray-100 text-xs"></div>
           </div>
-          <div class="bg-white p-5 rounded-3xl border border-gray-200/80 space-y-3">
-            <div class="flex items-center justify-between">
-              <h2 class="text-xs font-black text-gray-900 uppercase">Log Aktiviti Terkini</h2>
+
+          <div class="bg-white p-5 rounded-3xl border border-gray-200/80 flex flex-col overflow-hidden">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-100 shrink-0">
+              <div class="text-xs font-black uppercase tracking-wider text-gray-700">Log Aktiviti Terkini</div>
               <button type="button" onclick="muatAuditLog()" class="text-[11px] font-bold text-forest-800 hover:underline">Muat Semula</button>
             </div>
-            <div id="auditLogList" class="divide-y divide-gray-100 text-xs max-h-96 overflow-y-auto"></div>
+            <div id="auditLogList" class="flex-1 independent-data-scroll divide-y divide-gray-100 text-xs"></div>
           </div>
         </div>
-      </div>
-    </section>
 
-  </main>
-
-  <!-- ===================================================================== -->
-  <!-- MODAL LOG MASUK PENGGUNA (FATIN / FIKRIYAH / PENTADBIR)               -->
-  <!-- ===================================================================== -->
-  <div id="loginModal" class="fixed inset-0 z-50 bg-forest-950/90 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-gray-100 space-y-5">
-      <div class="text-center space-y-1.5">
-        <div class="w-12 h-12 rounded-2xl bg-forest-900 text-emerald-300 flex items-center justify-center mx-auto font-black text-xl shadow-sm">
-          A
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 shrink-0 max-h-48 overflow-hidden">
+          <div class="bg-white p-4 rounded-3xl border border-gray-200/80 independent-data-scroll space-y-2">
+            <div class="text-xs font-black text-gray-900">Templat WhatsApp Aktif</div>
+            <div id="waTemplatList" class="space-y-2"></div>
+          </div>
+          <div class="bg-white p-4 rounded-3xl border border-gray-200/80 independent-data-scroll space-y-2">
+            <div class="text-xs font-black text-gray-900">Senarai Pakej Umrah</div>
+            <div id="adminPakejList" class="space-y-2"></div>
+          </div>
         </div>
-        <h2 class="text-base font-black text-gray-900">Log Masuk e-ASTRA</h2>
-        <p class="text-xs text-gray-500">Pilih akaun petugas dan masukkan kata laluan</p>
-      </div>
+      </section>
 
-      <form onsubmit="kendaliLogMasuk(event)" class="space-y-4">
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Akaun Petugas / Pentadbir</label>
-          <select id="loginUserSelect" onchange="kendaliPilihanUserLogin(this.value)"
-            class="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs font-bold text-gray-900 bg-gray-50 focus:bg-white focus:border-forest-700 outline-none">
-            <option value="fatin">Fatin (PU / PIC)</option>
-            <option value="fikriyah">Fikriyah (PU / PIC)</option>
-            <option value="admin">Pentadbir (Admin)</option>
-            <option value="__custom__">ID Pengguna Lain...</option>
-          </select>
-          <input id="loginCustomIdInput" type="text" placeholder="Masukkan ID pengguna..."
-            class="hidden mt-2 w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-        </div>
-
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Kata Laluan / PIN</label>
-          <input id="loginPinInput" type="password" inputmode="numeric" maxlength="16" required placeholder="••••"
-            class="w-full px-4 py-2.5 rounded-2xl border border-gray-200 text-center text-base font-black tracking-[0.4em] outline-none focus:border-forest-700" />
-        </div>
-
-        <!-- Pad Kekunci Nombor Skrin -->
-        <div class="grid grid-cols-3 gap-2 pt-1">
-          <button type="button" onclick="tekanPadPin('1')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">1</button>
-          <button type="button" onclick="tekanPadPin('2')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">2</button>
-          <button type="button" onclick="tekanPadPin('3')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">3</button>
-          <button type="button" onclick="tekanPadPin('4')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">4</button>
-          <button type="button" onclick="tekanPadPin('5')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">5</button>
-          <button type="button" onclick="tekanPadPin('6')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">6</button>
-          <button type="button" onclick="tekanPadPin('7')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">7</button>
-          <button type="button" onclick="tekanPadPin('8')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">8</button>
-          <button type="button" onclick="tekanPadPin('9')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">9</button>
-          <button type="button" onclick="padamSemuaPin()" class="py-2.5 rounded-2xl bg-red-50 hover:bg-red-100 text-xs font-extrabold text-red-700">Padam</button>
-          <button type="button" onclick="tekanPadPin('0')" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-sm font-extrabold text-gray-900">0</button>
-          <button type="button" onclick="padamSatuPin()" class="py-2.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-xs font-extrabold text-gray-700 flex items-center justify-center">
-            <i data-lucide="delete" class="w-4 h-4"></i>
-          </button>
-        </div>
-
-        <div id="loginErrorMsg" class="hidden text-center text-xs font-bold text-red-600 bg-red-50 p-2.5 rounded-2xl"></div>
-
-        <button id="btnSubmitLogin" type="submit"
-          class="w-full py-3 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold shadow-sm transition-colors">
-          Sahkan &amp; Masuk Sistem
-        </button>
-      </form>
-    </div>
+    </main>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- MODAL TAMBAH / KEMASKINI PROSPEK (LEAD)                               -->
+  <!-- MODAL-MODAL BORANG SISTEM                                             -->
   <!-- ===================================================================== -->
   <div id="leadModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <form onsubmit="simpanLeadForm(event)" class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+    <form onsubmit="simpanLeadForm(event)" class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-3">
+      <div class="flex items-center justify-between">
         <h3 id="leadModalTitle" class="text-sm font-black text-gray-900">Tambah Prospek Baharu</h3>
-        <button type="button" onclick="tutupModal('leadModal')" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <button type="button" onclick="tutupModal('leadModal')" class="text-gray-400 hover:text-gray-700 text-xs font-bold">Tutup</button>
       </div>
       <input id="leadFormId" type="hidden" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Prospek *</label>
-          <input id="leadFormNama" type="text" required class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+      <div class="grid grid-cols-2 gap-2.5">
+        <div class="col-span-2">
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Penuh Prospek</label>
+          <input id="leadFormNama" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
         <div>
           <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Telefon</label>
-          <input id="leadFormTelefon" type="text" placeholder="0123456789" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <input id="leadFormTelefon" type="text" placeholder="0123456789" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
         <div>
           <label class="block text-[11px] font-bold text-gray-600 mb-1">Sumber</label>
-          <select id="leadFormSumber" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700">
+          <select id="leadFormSumber" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold">
             <option value="WhatsApp">WhatsApp</option>
             <option value="Facebook">Facebook</option>
             <option value="Instagram">Instagram</option>
@@ -674,8 +570,16 @@
           </select>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Peringkat</label>
-          <select id="leadFormPeringkat" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700">
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Pakej Diminati</label>
+          <select id="leadFormPakej" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold"></select>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Bilangan Pax</label>
+          <input id="leadFormPax" type="number" min="1" value="1" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Status</label>
+          <select id="leadFormPeringkat" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold">
             <option value="Baru">Baru</option>
             <option value="Dihubungi">Dihubungi</option>
             <option value="Berjaya">Berjaya</option>
@@ -683,325 +587,256 @@
           </select>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Pakej Diminati</label>
-          <select id="leadFormPakej" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700"></select>
-        </div>
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Bilangan Pax</label>
-          <input id="leadFormPax" type="number" min="1" value="1" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-        </div>
-        <div>
           <label class="block text-[11px] font-bold text-gray-600 mb-1">Tarikh Susulan</label>
-          <input id="leadFormSusulan" type="date" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <input id="leadFormSusulan" type="date" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">PIC Bertanggungjawab</label>
-          <input id="leadFormPic" type="text" placeholder="Fatin / Fikriyah" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+        <div class="col-span-2">
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">PU / PIC Seliaan</label>
+          <input id="leadFormPic" type="text" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
-      </div>
-      <div>
-        <label class="block text-[11px] font-bold text-gray-600 mb-1">Nota Susulan</label>
-        <textarea id="leadFormNota" rows="2" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700"></textarea>
+        <div class="col-span-2">
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nota Tambahan</label>
+          <textarea id="leadFormNota" rows="2" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs"></textarea>
+        </div>
       </div>
       <div class="flex justify-end gap-2 pt-2">
-        <button type="button" onclick="tutupModal('leadModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Batal</button>
-        <button type="submit" class="px-5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">Simpan Prospek</button>
+        <button type="button" onclick="tutupModal('leadModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-xs font-bold">Batal</button>
+        <button type="submit" class="px-4 py-2 rounded-2xl bg-forest-900 text-white text-xs font-extrabold">Simpan Prospek</button>
       </div>
     </form>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- MODAL WHATSAPP PANTAS                                                 -->
-  <!-- ===================================================================== -->
   <div id="waModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+    <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-3">
+      <div class="flex items-center justify-between">
         <div>
           <h3 class="text-sm font-black text-gray-900">Hantar Mesej WhatsApp</h3>
           <p id="waModalRecipient" class="text-[11px] text-gray-500"></p>
         </div>
-        <button type="button" onclick="tutupModal('waModal')" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <button type="button" onclick="tutupModal('waModal')" class="text-gray-400 hover:text-gray-700 text-xs font-bold">Tutup</button>
       </div>
       <div>
         <label class="block text-[11px] font-bold text-gray-600 mb-1">Pilih Templat</label>
-        <select id="waTemplateSelect" onchange="pilihTemplatWa(this.value)"
-          class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700"></select>
+        <select id="waTemplateSelect" onchange="pilihTemplatWa(this.value)" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold"></select>
       </div>
       <div>
-        <label class="block text-[11px] font-bold text-gray-600 mb-1">Pratonton &amp; Sunting Mesej</label>
-        <textarea id="waMessagePreview" rows="5"
-          class="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700"></textarea>
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Pratonton Mesej</label>
+        <textarea id="waMessagePreview" rows="5" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs"></textarea>
       </div>
-      <div class="flex justify-end gap-2">
-        <button type="button" onclick="tutupModal('waModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Tutup</button>
-        <button type="button" onclick="bukaPautanWhatsApp()"
-          class="px-5 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold inline-flex items-center gap-1.5">
-          <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Buka WhatsApp &amp; Rekod
-        </button>
+      <div class="flex justify-end gap-2 pt-1">
+        <button type="button" onclick="tutupModal('waModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-xs font-bold">Batal</button>
+        <button type="button" onclick="bukaPautanWhatsApp()" class="px-4 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold">Buka WhatsApp</button>
       </div>
     </div>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- MODAL IMPORT PROSPEK PUKAL                                            -->
-  <!-- ===================================================================== -->
   <div id="importModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <form onsubmit="prosesImportPukal(event)" class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-        <h3 class="text-sm font-black text-gray-900">Import Prospek Secara Pukal</h3>
-        <button type="button" onclick="tutupModal('importModal')" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-      <p class="text-[11px] text-gray-500">Format satu baris per prospek: <code class="bg-gray-100 px-1.5 py-0.5 rounded">Nama, No Telefon, Sumber, Pakej, Pax</code></p>
-      <textarea id="importPukalText" rows="6" required placeholder="Ahmad bin Ali, 0123456789, WhatsApp, Safwah Orchid, 2"
-        class="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700"></textarea>
+    <form onsubmit="prosesImportPukal(event)" class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-3">
+      <h3 class="text-sm font-black text-gray-900">Import Prospek Pukal</h3>
+      <p class="text-[11px] text-gray-500">Format setiap baris: Nama, No Telefon, Sumber, Pakej</p>
+      <textarea id="importPukalText" rows="6" required placeholder="Ahmad Bin Ali, 0123456789, Facebook, Safwah Orchid"
+        class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs"></textarea>
       <div class="flex justify-end gap-2">
-        <button type="button" onclick="tutupModal('importModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Batal</button>
-        <button type="submit" class="px-5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">Mula Import</button>
+        <button type="button" onclick="tutupModal('importModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-xs font-bold">Batal</button>
+        <button type="submit" class="px-4 py-2 rounded-2xl bg-forest-900 text-white text-xs font-extrabold">Import Sekarang</button>
       </div>
     </form>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- MODAL TUKAR PROSPEK KE JEMAAH                                         -->
-  <!-- ===================================================================== -->
   <div id="tukarJemaahModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <form onsubmit="prosesTukarKeJemaah(event)" class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-        <h3 class="text-sm font-black text-gray-900">Daftar Prospek sebagai Jemaah</h3>
-        <button type="button" onclick="tutupModal('tukarJemaahModal')" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
+    <form onsubmit="prosesTukarKeJemaah(event)" class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3">
+      <h3 class="text-sm font-black text-gray-900">Daftar Prospek ke Jemaah</h3>
+      <p id="tukarLeadNamaInfo" class="text-xs text-gray-600 font-semibold"></p>
       <input id="tukarLeadId" type="hidden" />
-      <div id="tukarLeadNamaInfo" class="text-xs font-bold text-forest-900 bg-emerald-50 p-3 rounded-2xl"></div>
       <div>
-        <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Kad Pengenalan (12 Digit) *</label>
-        <input id="tukarLeadNokp" type="text" pattern="\d{12}" maxlength="12" required placeholder="900101115555"
-          class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Kad Pengenalan (12 Digit)</label>
+        <input id="tukarLeadNokp" type="text" required maxlength="14" placeholder="900101115555" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
       </div>
       <div>
-        <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Pegawai Umrah (PU)</label>
-        <input id="tukarLeadPu" type="text" placeholder="Nama PU"
-          class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama PU Seliaan</label>
+        <input id="tukarLeadPu" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
       </div>
-      <div class="flex justify-end gap-2">
-        <button type="button" onclick="tutupModal('tukarJemaahModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Batal</button>
-        <button type="submit" class="px-5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">Sahkan Pendaftaran</button>
+      <div class="flex justify-end gap-2 pt-1">
+        <button type="button" onclick="tutupModal('tukarJemaahModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-xs font-bold">Batal</button>
+        <button type="submit" class="px-4 py-2 rounded-2xl bg-forest-900 text-white text-xs font-extrabold">Sahkan Pendaftaran</button>
       </div>
     </form>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- MODAL PENDAFTARAN & KEMASKINI KELENGKAPAN JEMAAH                      -->
-  <!-- ===================================================================== -->
   <div id="jemaahModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <form onsubmit="simpanJemaahForm(event)" class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-        <h3 id="jemaahModalTitle" class="text-sm font-black text-gray-900">Pendaftaran Jemaah Baharu</h3>
-        <button type="button" onclick="tutupModal('jemaahModal')" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
+    <form onsubmit="simpanJemaahForm(event)" class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-3">
+      <h3 id="jemaahModalTitle" class="text-sm font-black text-gray-900">Pendaftaran Jemaah Baharu</h3>
       <input id="jemaahFormMode" type="hidden" value="baru" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Penuh Jemaah *</label>
-          <input id="jemaahFormNama" type="text" required class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+      <div class="grid grid-cols-2 gap-2.5">
+        <div class="col-span-2">
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Penuh (Seperti Pasport/KP)</label>
+          <input id="jemaahFormNama" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Kad Pengenalan (12 Digit) *</label>
-          <input id="jemaahFormNokp" type="text" pattern="\d{12}" maxlength="12" required class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Kad Pengenalan</label>
+          <input id="jemaahFormNokp" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Telefon *</label>
-          <input id="jemaahFormTelefon" type="text" required class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">No. Telefon</label>
+          <input id="jemaahFormTelefon" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+        </div>
+        <div class="col-span-2">
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama PU Seliaan</label>
+          <input id="jemaahFormPu" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama PU</label>
-          <input id="jemaahFormPu" type="text" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-        <label class="flex items-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-xs font-bold cursor-pointer">
-          <input id="jemaahChkBeg" type="checkbox" class="accent-forest-900" /> Beg Umrah
-        </label>
-        <label class="flex items-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-xs font-bold cursor-pointer">
-          <input id="jemaahChkKursus" type="checkbox" class="accent-forest-900" /> Kursus
-        </label>
-        <label class="flex items-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-xs font-bold cursor-pointer">
-          <input id="jemaahChkJadual" type="checkbox" class="accent-forest-900" /> Jadual
-        </label>
-        <label class="flex items-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-xs font-bold cursor-pointer">
-          <input id="jemaahChkKeyin" type="checkbox" class="accent-forest-900" /> Key-In
-        </label>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Salinan Pasport (PDF/Imej)</label>
-          <input id="jemaahFilePasport" type="file" accept=".pdf,image/*" class="w-full text-[11px]" />
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Salinan Pasport</label>
+          <input id="jemaahFilePasport" type="file" class="w-full text-[11px]" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Bukti Pembayaran (PDF/Imej)</label>
-          <input id="jemaahFileResit" type="file" accept=".pdf,image/*" class="w-full text-[11px]" />
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Bukti Bayaran</label>
+          <input id="jemaahFileResit" type="file" class="w-full text-[11px]" />
         </div>
       </div>
-
+      <div class="grid grid-cols-2 gap-2 pt-1 text-xs font-bold text-gray-700">
+        <label class="flex items-center gap-2"><input id="jemaahChkBeg" type="checkbox" /> Beg Umrah</label>
+        <label class="flex items-center gap-2"><input id="jemaahChkKursus" type="checkbox" /> Kursus Umrah</label>
+        <label class="flex items-center gap-2"><input id="jemaahChkJadual" type="checkbox" /> Jadual Penerbangan</label>
+        <label class="flex items-center gap-2"><input id="jemaahChkKeyin" type="checkbox" /> Key-In Sistem</label>
+      </div>
       <div class="flex justify-end gap-2 pt-2">
-        <button type="button" onclick="tutupModal('jemaahModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Batal</button>
-        <button id="btnSimpanJemaah" type="submit" class="px-5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">Simpan Rekod Jemaah</button>
+        <button type="button" onclick="tutupModal('jemaahModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-xs font-bold">Batal</button>
+        <button id="btnSimpanJemaah" type="submit" class="px-4 py-2 rounded-2xl bg-forest-900 text-white text-xs font-extrabold">Simpan Rekod Jemaah</button>
       </div>
     </form>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- MODAL ITEM STOK & TRANSAKSI STOK                                      -->
-  <!-- ===================================================================== -->
   <div id="stokItemModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <form onsubmit="simpanItemStok(event)" class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-        <h3 id="stokItemModalTitle" class="text-sm font-black text-gray-900">Tambah / Kemas Kini Item Stok</h3>
-        <button type="button" onclick="tutupModal('stokItemModal')" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+    <form onsubmit="simpanItemStok(event)" class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3">
+      <h3 id="stokItemModalTitle" class="text-sm font-black text-gray-900">Tambah Item Stok Baharu</h3>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Kod SKU</label>
+        <input id="stokFormSku" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Kod SKU *</label>
-          <input id="stokFormSku" type="text" required placeholder="SKU-001" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-        </div>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Item</label>
+        <input id="stokFormName" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+      </div>
+      <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="block text-[11px] font-bold text-gray-600 mb-1">Kategori</label>
-          <input id="stokFormCategory" type="text" value="Set Umrah" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <input id="stokFormCategory" type="text" value="Set Umrah" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
-      </div>
-      <div>
-        <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Item *</label>
-        <input id="stokFormName" type="text" required placeholder="Beg Troli 24 Inci" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-      </div>
-      <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block text-[11px] font-bold text-gray-600 mb-1">Stok Permulaan</label>
-          <input id="stokFormOpening" type="number" min="0" value="0" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <input id="stokFormOpening" type="number" min="0" value="0" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Paras Minimum</label>
-          <input id="stokFormMin" type="number" min="0" value="5" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Had Minimum</label>
+          <input id="stokFormMin" type="number" min="0" value="5" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Lokasi</label>
+          <input id="stokFormLocation" type="text" value="Cawangan Terengganu" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
       </div>
-      <div>
-        <label class="block text-[11px] font-bold text-gray-600 mb-1">Lokasi Simpanan</label>
-        <input id="stokFormLocation" type="text" value="Cawangan Terengganu" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-      </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button type="button" onclick="tutupModal('stokItemModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Batal</button>
-        <button type="submit" class="px-5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">Simpan Item</button>
+      <div class="flex justify-end gap-2 pt-1">
+        <button type="button" onclick="tutupModal('stokItemModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-xs font-bold">Batal</button>
+        <button type="submit" class="px-4 py-2 rounded-2xl bg-forest-900 text-white text-xs font-extrabold">Simpan Item</button>
       </div>
     </form>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- MODAL TRANSAKSI KELUAR / MASUK STOK                                   -->
-  <!-- ===================================================================== -->
   <div id="stokTxModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <form onsubmit="simpanTransaksiStok(event)" class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-        <h3 class="text-sm font-black text-gray-900">Rekod Transaksi Keluar / Masuk Stok</h3>
-        <button type="button" onclick="tutupModal('stokTxModal')" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
+    <form onsubmit="simpanTransaksiStok(event)" class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3">
+      <h3 class="text-sm font-black text-gray-900">Rekod Keluar / Masuk Stok</h3>
       <div>
-        <label class="block text-[11px] font-bold text-gray-600 mb-1">Pilih Item Inventori *</label>
-        <select id="txFormSku" required class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700"></select>
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Pilih Item</label>
+        <select id="txFormSku" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold"></select>
       </div>
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="block text-[11px] font-bold text-gray-600 mb-1">Jenis Transaksi</label>
-          <select id="txFormType" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700">
-            <option value="Keluar">Keluar Stok</option>
-            <option value="Masuk">Masuk Stok</option>
-            <option value="Pelarasan">Pelarasan (Kiraan Fizikal)</option>
+          <select id="txFormType" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold">
+            <option value="Keluar">Keluar (Serahan)</option>
+            <option value="Masuk">Masuk (Terima Stok)</option>
+            <option value="Pelarasan">Pelarasan Baki</option>
           </select>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Kuantiti *</label>
-          <input id="txFormQty" type="number" min="1" value="1" required class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Kuantiti</label>
+          <input id="txFormQty" type="number" min="1" value="1" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Lokasi</label>
-          <input id="txFormLocation" type="text" value="Cawangan Terengganu" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-        </div>
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Catatan</label>
-          <input id="txFormNote" type="text" placeholder="Contoh: Serahan jemaah" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-        </div>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Lokasi</label>
+        <input id="txFormLocation" type="text" value="Cawangan Terengganu" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
       </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button type="button" onclick="tutupModal('stokTxModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Batal</button>
-        <button type="submit" class="px-5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">Simpan Transaksi</button>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Catatan</label>
+        <input id="txFormNote" type="text" placeholder="Contoh: Serahan kepada jemaah" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
+      </div>
+      <div class="flex justify-end gap-2 pt-1">
+        <button type="button" onclick="tutupModal('stokTxModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-xs font-bold">Batal</button>
+        <button type="submit" class="px-4 py-2 rounded-2xl bg-emerald-600 text-white text-xs font-extrabold">Simpan Transaksi</button>
       </div>
     </form>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- MODAL TAMBAH / EDIT AKAUN PENGGUNA (ADMIN SAHAJA)                     -->
-  <!-- ===================================================================== -->
   <div id="penggunaModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <form onsubmit="simpanPenggunaForm(event)" class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-        <h3 id="penggunaModalTitle" class="text-sm font-black text-gray-900">Kemas Kini Akaun Pengguna</h3>
-        <button type="button" onclick="tutupModal('penggunaModal')" class="p-1.5 rounded-xl text-gray-400 hover:text-gray-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+    <form onsubmit="simpanPenggunaForm(event)" class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3">
+      <h3 id="penggunaModalTitle" class="text-sm font-black text-gray-900">Tambah Akaun Pengguna Baharu</h3>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">ID Log Masuk (Huruf Kecil)</label>
+        <input id="usrFormId" type="text" required placeholder="contoh: ahmad" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">ID Log Masuk *</label>
-          <input id="usrFormId" type="text" required placeholder="cth: fatin" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-        </div>
-        <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Paparan *</label>
-          <input id="usrFormNama" type="text" required placeholder="cth: Fatin" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
-        </div>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Paparan</label>
+        <input id="usrFormNama" type="text" required placeholder="Contoh: Ustaz Ahmad" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Peranan Akaun</label>
-          <select id="usrFormPeranan" onchange="kendaliPerananPenggunaForm(this.value)" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700">
-            <option value="pic">Petugas / PU (PIC)</option>
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Peranan</label>
+          <select id="usrFormPeranan" onchange="kendaliPerananPenggunaForm(this.value)" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold">
+            <option value="pic">Petugas / PU</option>
             <option value="admin">Pentadbir (Admin)</option>
           </select>
         </div>
         <div id="usrFormPicWrapper">
-          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama Seliaan PU / PIC</label>
-          <input id="usrFormPic" type="text" placeholder="cth: Fatin" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+          <label class="block text-[11px] font-bold text-gray-600 mb-1">Nama PU Seliaan</label>
+          <input id="usrFormPic" type="text" placeholder="Contoh: Ahmad" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
         </div>
       </div>
       <div>
-        <label class="block text-[11px] font-bold text-gray-600 mb-1">Kata Laluan / PIN Baharu</label>
-        <input id="usrFormPassword" type="password" placeholder="Biarkan kosong jika tidak mahu tukar" class="w-full px-3.5 py-2 rounded-2xl border border-gray-200 text-xs outline-none focus:border-forest-700" />
+        <label class="block text-[11px] font-bold text-gray-600 mb-1">Kata Laluan / PIN</label>
+        <input id="usrFormPassword" type="password" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold" />
       </div>
-      <label class="flex items-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-xs font-bold cursor-pointer">
-        <input id="usrFormAktif" type="checkbox" checked class="accent-forest-900" /> Akaun Aktif (Dibenarkan Log Masuk)
+      <label class="flex items-center gap-2 text-xs font-bold text-gray-700 pt-1">
+        <input id="usrFormAktif" type="checkbox" checked /> Akaun Aktif
       </label>
       <div class="flex justify-end gap-2 pt-2">
-        <button type="button" onclick="tutupModal('penggunaModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Batal</button>
-        <button type="submit" class="px-5 py-2 rounded-2xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-extrabold">Simpan Pengguna</button>
+        <button type="button" onclick="tutupModal('penggunaModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-xs font-bold">Batal</button>
+        <button type="submit" class="px-4 py-2 rounded-2xl bg-forest-900 text-white text-xs font-extrabold">Simpan Akaun</button>
       </div>
     </form>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- NOTIFIKASI TOAST                                                      -->
+  <!-- NOTIFIKASI TOAST & MODAL PENGESAHAN TERSUAI                           -->
   <!-- ===================================================================== -->
+  <div id="confirmDialogModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+          <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-sm font-black text-gray-900">Pengesahan Tindakan</h3>
+          <p id="confirmDialogText" class="text-xs text-gray-500 mt-0.5"></p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-1">
+        <button type="button" onclick="tutupModal('confirmDialogModal')" class="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold">Batal</button>
+        <button id="confirmDialogYesBtn" type="button" class="px-4 py-2 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold">Ya, Teruskan</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- ===================================================================== -->
@@ -1010,6 +845,7 @@
   <script>
     const SESSION_STORAGE_KEY = 'eastra_session_token_v2';
     const USER_STORAGE_KEY = 'eastra_session_user_v2';
+    const DATA_CACHE_PREFIX = 'eastra_dash_cache_v2_';
 
     const _EP_HOST = 'https://script.google.com/macros/s/';
     const _EP_SEG = ['AKfycbwHtqRN_4axCBvxe', '_2juwBxoIrLZVRz5nWPp8eq1', 'E81SxdnPOFsnUYAInXhKlZW-fkfqA'];
@@ -1265,6 +1101,7 @@
     }
 
     async function kendaliLogKeluar() {
+      const oldUserId = (appState.currentUser && appState.currentUser.id) || '';
       try {
         if (appState.sessionToken) {
           await apiGet('logKeluar', { sesi: appState.sessionToken }).catch(() => {});
@@ -1274,8 +1111,29 @@
         appState.currentUser = null;
         localStorage.removeItem(SESSION_STORAGE_KEY);
         localStorage.removeItem(USER_STORAGE_KEY);
+        if (oldUserId) localStorage.removeItem(DATA_CACHE_PREFIX + oldUserId);
         document.getElementById('loginModal').classList.remove('hidden');
         kemaskiniUIProfilPengguna();
+      }
+    }
+
+    function kendaliScrollContainer(el, jenis) {
+      if (!el) return;
+      const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 80;
+      if (!nearBottom) return;
+
+      if (jenis === 'susulan' && appState.susulanLimit < 500) {
+        appState.susulanLimit += 15;
+        renderSusulanWorkspace();
+      } else if (jenis === 'leads' && appState.leadsLimit < appState.leads.length) {
+        appState.leadsLimit += 20;
+        renderLeadsTable();
+      } else if (jenis === 'jemaah' && appState.jemaahLimit < appState.jemaah.length) {
+        appState.jemaahLimit += 12;
+        renderJemaahList();
+      } else if (jenis === 'stok' && appState.stokLimit < appState.stokItems.length) {
+        appState.stokLimit += 15;
+        renderStokGrid();
       }
     }
 
@@ -1369,26 +1227,88 @@
         document.getElementById('filterStokSearch').value = q;
         renderStokGrid();
       } else {
-        document.getElementById('filterLeadSearch').value = q;
+        appState.susulanSearch = q.toLowerCase();
         renderSusulanWorkspace();
       }
     }
+    function applyDashboardPayload(d) {
+      appState.leads = (d.leads && d.leads.ok && d.leads.data) ? d.leads.data : [];
+      appState.jemaah = (d.jemaah && d.jemaah.ok && d.jemaah.data) ? d.jemaah.data : [];
+      appState.stokItems = (d.stok && d.stok.ok && d.stok.data && d.stok.data.items) ? d.stok.data.items : [];
+      appState.stokLogs = (d.stok && d.stok.ok && d.stok.data && d.stok.data.logs) ? d.stok.data.logs : [];
+      appState.waTemplates = (d.waTemplat && d.waTemplat.ok && d.waTemplat.data) ? d.waTemplat.data : [];
+      appState.pakejList = (d.pakej && d.pakej.ok && d.pakej.pakej) ? d.pakej.pakej : [];
+      appState.penggunaList = d.pengguna || [];
 
-    function kendaliScrollContainer(jenis, el) {
-      if (!el) return;
-      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 80) {
-        if (jenis === 'susulan' && appState.susulanLimit < 500) {
-          appState.susulanLimit += 15;
-          renderSusulanWorkspace();
-        } else if (jenis === 'leads' && appState.leadsLimit < appState.leads.length) {
-          appState.leadsLimit += 15;
-          renderLeadsTable();
-        } else if (jenis === 'jemaah' && appState.jemaahLimit < appState.jemaah.length) {
-          appState.jemaahLimit += 10;
-          renderJemaahList();
-        } else if (jenis === 'stok' && appState.stokLimit < appState.stokItems.length) {
-          appState.stokLimit += 10;
-          renderStokGrid();
+      if (d.stok && d.stok.ok && d.stok.data && d.stok.data.dashboard) {
+        const kpi = d.stok.data.dashboard;
+        document.getElementById('kpiStokSku').textContent = kpi.totalItems || 0;
+        document.getElementById('kpiStokTotalUnit').textContent = kpi.totalStock || 0;
+        document.getElementById('kpiStokOk').textContent = kpi.okStock || 0;
+        document.getElementById('kpiStokLow').textContent = (kpi.lowStock || 0) + (kpi.emptyStock || 0);
+      }
+
+      kemaskiniLencanaStatistik();
+      renderSusulanWorkspace();
+      renderLeadsTable();
+      renderJemaahList();
+      renderStokGrid();
+      renderStokLogs();
+      isiDropdownPakej();
+      refreshIcons();
+    }
+
+    async function muatSemulaSemuaData() {
+      if (!appState.sessionToken) {
+        document.getElementById('loginModal').classList.remove('hidden');
+        return;
+      }
+
+      const userId = (appState.currentUser && appState.currentUser.id) || 'default';
+      const cacheKey = DATA_CACHE_PREFIX + userId;
+      let hasCachedData = false;
+
+      // Papar data cache serta-merta jika ada (0ms) sambil menyegerakkan data baharu di latar belakang
+      try {
+        const cachedRaw = localStorage.getItem(cacheKey);
+        if (cachedRaw) {
+          const cachedData = JSON.parse(cachedRaw);
+          if (cachedData && cachedData.leads) {
+            applyDashboardPayload(cachedData);
+            hasCachedData = true;
+          }
+        }
+      } catch (e) {}
+
+      if (!hasCachedData) {
+        paparkanSkeletonSemuaModul();
+      }
+
+      try {
+        const res = await apiGet('getInitDashboardData');
+        if (!res || !res.ok) {
+          if (res && res.perluLogMasuk) {
+            kendaliLogKeluar();
+            return;
+          }
+          throw new Error((res && res.message) || 'Gagal memuatkan data dari pelayan.');
+        }
+
+        const d = res.data || {};
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(d));
+        } catch (e) {}
+        applyDashboardPayload(d);
+      } catch (err) {
+        if (!hasCachedData) {
+          showToast(err.message || 'Ralat memuatkan data.', true);
+          const errHtml = `
+            <div class="bg-red-50 border border-red-200 rounded-2xl p-5 text-center space-y-2">
+              <div class="text-xs font-extrabold text-red-800">Gagal Memuatkan Data</div>
+              <div class="text-[11px] text-red-600">${escapeHtml(err.message || String(err))}</div>
+              <button type="button" onclick="muatSemulaSemuaData()" class="px-4 py-1.5 rounded-xl bg-red-700 text-white text-xs font-bold">Cuba Semula</button>
+            </div>`;
+          document.getElementById('susulanTaskList').innerHTML = errHtml;
         }
       }
     }
@@ -1423,61 +1343,6 @@
 
       const stokList = document.getElementById('stokSingleColList');
       if (stokList) stokList.innerHTML = skelCard.repeat(4);
-    }
-
-    async function muatSemulaSemuaData() {
-      if (!appState.sessionToken) {
-        document.getElementById('loginModal').classList.remove('hidden');
-        return;
-      }
-
-      paparkanSkeletonSemuaModul();
-
-      try {
-        const res = await apiGet('getInitDashboardData');
-        if (!res || !res.ok) {
-          if (res && res.perluLogMasuk) {
-            kendaliLogKeluar();
-            return;
-          }
-          throw new Error((res && res.message) || 'Gagal memuatkan data dari pelayan.');
-        }
-
-        const d = res.data || {};
-        appState.leads = (d.leads && d.leads.ok && d.leads.data) ? d.leads.data : [];
-        appState.jemaah = (d.jemaah && d.jemaah.ok && d.jemaah.data) ? d.jemaah.data : [];
-        appState.stokItems = (d.stok && d.stok.ok && d.stok.data && d.stok.data.items) ? d.stok.data.items : [];
-        appState.stokLogs = (d.stok && d.stok.ok && d.stok.data && d.stok.data.logs) ? d.stok.data.logs : [];
-        appState.waTemplates = (d.waTemplat && d.waTemplat.ok && d.waTemplat.data) ? d.waTemplat.data : [];
-        appState.pakejList = (d.pakej && d.pakej.ok && d.pakej.pakej) ? d.pakej.pakej : [];
-        appState.penggunaList = d.pengguna || [];
-
-        if (d.stok && d.stok.ok && d.stok.data && d.stok.data.dashboard) {
-          const kpi = d.stok.data.dashboard;
-          document.getElementById('kpiStokSku').textContent = kpi.totalItems || 0;
-          document.getElementById('kpiStokTotalUnit').textContent = kpi.totalStock || 0;
-          document.getElementById('kpiStokOk').textContent = kpi.okStock || 0;
-          document.getElementById('kpiStokLow').textContent = (kpi.lowStock || 0) + (kpi.emptyStock || 0);
-        }
-
-        kemaskiniLencanaStatistik();
-        renderSusulanWorkspace();
-        renderLeadsTable();
-        renderJemaahList();
-        renderStokGrid();
-        renderStokLogs();
-        isiDropdownPakej();
-        refreshIcons();
-      } catch (err) {
-        showToast(err.message || 'Ralat memuatkan data.', true);
-        const errHtml = `
-          <div class="bg-red-50 border border-red-200 rounded-2xl p-5 text-center space-y-2">
-            <div class="text-xs font-extrabold text-red-800">Gagal Memuatkan Data</div>
-            <div class="text-[11px] text-red-600">${escapeHtml(err.message || String(err))}</div>
-            <button type="button" onclick="muatSemulaSemuaData()" class="px-4 py-1.5 rounded-xl bg-red-700 text-white text-xs font-bold">Cuba Semula</button>
-          </div>`;
-        document.getElementById('susulanTaskList').innerHTML = errHtml;
-      }
     }
 
     function kemaskiniLencanaStatistik() {
@@ -1548,6 +1413,10 @@
           badge: l.tarikhSusulan ? `Susulan: ${l.tarikhSusulan}` : l.peringkat,
           raw: l
         }));
+      }
+
+      if (appState.susulanSearch) {
+        items = items.filter(it => `${it.title} ${it.sub} ${it.badge}`.toLowerCase().includes(appState.susulanSearch));
       }
 
       if (items.length > 0) {
@@ -1841,27 +1710,39 @@
       logsEl.innerHTML = appState.stokLogs.slice(0, 25).map(lg => `
         <div class="py-2.5 flex items-center justify-between gap-2">
           <div class="min-w-0">
-            <div class="font-bold text-gray-800 truncate">${escapeHtml(lg.item)}</div>
+            <div class="font-bold text-gray-900 truncate">${escapeHtml(lg.item)}</div>
             <div class="text-[10px] text-gray-400">${escapeHtml(lg.date)} • ${escapeHtml(lg.pic || '-')}</div>
           </div>
-          <span class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold shrink-0 ${lg.type.toLowerCase() === 'masuk' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}">
-            ${lg.type.toLowerCase() === 'masuk' ? '+' : '-'}${lg.qty}
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold shrink-0 ${
+            lg.type === 'Masuk' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+          }">
+            ${lg.type === 'Masuk' ? '+' : '-'}${lg.qty}
           </span>
         </div>
       `).join('');
     }
 
-    /* ===================================================================== */
-    /* MODUL 6: TETAPAN & PENTADBIR                                          */
-    /* ===================================================================== */
-    function setAdminTab(tab) {
-      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-        btn.className = btn.dataset.adminTab === tab
-          ? 'admin-tab-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-forest-900 text-white'
-          : 'admin-tab-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-600';
-      });
-      document.querySelectorAll('.admin-subpanel').forEach(p => {
-        p.classList.toggle('hidden', p.id !== 'adminPanel-' + tab);
+    function mintaPengesahanTindakan(mesej, onConfirm) {
+      document.getElementById('confirmDialogText').textContent = mesej;
+      const yesBtn = document.getElementById('confirmDialogYesBtn');
+      yesBtn.onclick = () => {
+        tutupModal('confirmDialogModal');
+        onConfirm();
+      };
+      bukaModal('confirmDialogModal');
+    }
+
+    function padamPenggunaAdmin(userId) {
+      mintaPengesahanTindakan(`Padam akaun pengguna "${userId}" daripada sistem?`, async () => {
+        try {
+          const res = await apiPost('padamPenggunaAuth', { id: userId });
+          if (!res || !res.ok) throw new Error((res && res.message) || 'Gagal memadam pengguna.');
+          showToast(res.message || 'Akaun pengguna dipadam.');
+          appState.penggunaList = [];
+          await renderAdminPenggunaList();
+        } catch (err) {
+          showToast(err.message || String(err), true);
+        }
       });
     }
 
@@ -1976,19 +1857,6 @@
         if (!res || !res.ok) throw new Error((res && res.message) || 'Gagal menyimpan pengguna.');
         tutupModal('penggunaModal');
         showToast(res.message || 'Butiran pengguna disimpan.');
-        appState.penggunaList = [];
-        await renderAdminPenggunaList();
-      } catch (err) {
-        showToast(err.message || String(err), true);
-      }
-    }
-
-    async function padamPenggunaAdmin(userId) {
-      if (!confirm(`Padam akaun pengguna "${userId}"?`)) return;
-      try {
-        const res = await apiPost('padamPenggunaAuth', { id: userId });
-        if (!res || !res.ok) throw new Error((res && res.message) || 'Gagal memadam pengguna.');
-        showToast(res.message || 'Akaun pengguna dipadam.');
         appState.penggunaList = [];
         await renderAdminPenggunaList();
       } catch (err) {
