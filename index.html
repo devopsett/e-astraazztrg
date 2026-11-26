@@ -2940,21 +2940,99 @@
       return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
     }
 
-    function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
-      const template = `*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*\n\n*SEMUA DIJEMPUT HADIR 🕋*\n\n🗓️ ${tarikh || '26 September 2026 (Sabtu)'}\n🕰️ ${waktu || '9.00 Pagi - 12.00 Tengah Hari'}\n🕌 ${tempat || 'Masjid Al-Muktafi Billah Shah, Ladang'}\n\nDaftar di pautan ini👇\n${linkBorang}`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(template)}`, '_blank');
+    /* FORMAT MESEJ ASAL HEBAHAN KURSUS UMRAH */
+    function binaMesejKursusUmrah(tarikh, waktu, tempat, linkBorang) {
+      const tarikhPaparan = (tarikh && tarikh.trim().length > 0) ? tarikh.trim() : '26 September 2026 (Sabtu)';
+
+      return `*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*
+
+*SEMUA DIJEMPUT HADIR 🕋*
+
+Ikuti kupasan menarik ibadah umrah yang perlu diketahui bakal Dhuyufurrahman serta info lain yang akan turut dikongsikan kepada jemaah semua❤️
+
+🗓️ ${tarikhPaparan}
+🕰️ ${waktu || '9.00 Pagi - 12.00 Tengah Hari'}
+🕌 ${tempat || 'Masjid Al-Muktafi Billah Shah, Ladang'} (location) 👇
+https://maps.app.goo.gl/977eNNpENp1jtdPg7
+
+Tuan/Puan *DIWAJIBKAN* mendaftar melalui Google Form pada pautan dibawah untuk sahkan kehadiran dan jumlah pax yang hadir👇
+${linkBorang}
+
+Jom pakat mari ramai-ramai!
+
+#AzzuhaMenyantuniDenganHati #umrah`;
     }
 
-    function shareDirectWhatsAppResult() {
-      shareToWhatsApp(formatTarikhKursusMelayu(document.getElementById('ufTarikhInput').value), document.getElementById('ufWaktu').value, document.getElementById('ufTempat').value, document.getElementById('resLiveUrl').value);
+    function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
+      const template = binaMesejKursusUmrah(tarikh, waktu, tempat, linkBorang);
+      const encoded = encodeURIComponent(template);
+      window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+    }
+
+    async function shareDirectWhatsAppResult() {
+      const link = document.getElementById('resLiveUrl').value;
+      const rawDate = document.getElementById('ufTarikhInput').value;
+      const formattedDate = formatTarikhKursusMelayu(rawDate);
+      const waktu = document.getElementById('ufWaktu').value;
+      const tempat = document.getElementById('ufTempat').value;
+      const fileInput = document.getElementById('ufPosterFile');
+
+      const template = binaMesejKursusUmrah(formattedDate, waktu, tempat, link);
+
+      // Sokongan Web Share API berserta fail poster gambar di telefon pintar
+      if (fileInput && fileInput.files && fileInput.files[0] && navigator.canShare && navigator.canShare({ files: [fileInput.files[0]] })) {
+        try {
+          await navigator.share({
+            files: [fileInput.files[0]],
+            title: 'Kursus Umrah Terbuka',
+            text: template
+          });
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      const encoded = encodeURIComponent(template);
+      window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
     }
 
     async function handleGenerateUmrahForm(e) {
-      e.preventDefault(); showLoading(true, 'Menduplikasi templat borang...');
+      e.preventDefault();
       const rawDate = document.getElementById('ufTarikhInput').value;
+      const formattedDate = formatTarikhKursusMelayu(rawDate);
+      const bulanText = getBulanKursusMelayu(rawDate);
+      const fileInput = document.getElementById('ufPosterFile');
+
+      if (!validateFileInput(fileInput, null)) return;
+
+      showLoading(true, 'Menduplikasi templat borang...');
+      let posterBase64 = '', posterType = '';
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        posterType = file.type || 'image/jpeg';
+        posterBase64 = await new Promise(res => {
+          const r = new FileReader();
+          r.onload = () => res(r.result.split(',')[1]);
+          r.readAsDataURL(file);
+        });
+      }
+
       fetch(withToken(SCRIPT_URL), {
         method: 'POST', headers: apiHeaders(),
-        body: apiBody({ action: 'createKursusUmrahForm', data: { tarikh: rawDate, tarikhFormatted: formatTarikhKursusMelayu(rawDate), bulan: getBulanKursusMelayu(rawDate), waktu: document.getElementById('ufWaktu').value.trim(), tempat: document.getElementById('ufTempat').value.trim(), noTel: document.getElementById('ufNoTel').value.trim() } })
+        body: apiBody({
+          action: 'createKursusUmrahForm',
+          data: {
+            tarikh: rawDate,
+            tarikhFormatted: formattedDate,
+            bulan: bulanText,
+            waktu: document.getElementById('ufWaktu').value.trim(),
+            tempat: document.getElementById('ufTempat').value.trim(),
+            noTel: document.getElementById('ufNoTel').value.trim(),
+            posterBase64: posterBase64,
+            posterType: posterType
+          }
+        })
       }).then(res => res.json()).then(res => {
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
@@ -2962,7 +3040,22 @@
         document.getElementById('resLiveUrl').value = res.formUrl; document.getElementById('resEditUrl').value = res.editUrl;
         document.getElementById('linkLiveBtn').href = safeUrl(res.formUrl); document.getElementById('linkEditBtn').href = safeUrl(res.editUrl);
         document.getElementById('umrahFormResult').classList.remove('hidden');
-        if (res.formsList) renderUmrahFormsList(res.formsList);
+
+        let localForms = safeGetJSON('eastra_umrah_forms', []);
+        if (!Array.isArray(localForms)) localForms = [];
+        localForms = localForms.filter(f => f.id !== res.formUrl);
+        localForms.unshift({
+          id: res.formUrl,
+          name: res.formTitle,
+          liveUrl: res.formUrl,
+          editUrl: res.editUrl,
+          dateCreated: new Date().toLocaleDateString('ms-MY'),
+          eventDate: formattedDate
+        });
+        safeSetItem('eastra_umrah_forms', JSON.stringify(localForms));
+
+        if (res.formsList && res.formsList.length) renderUmrahFormsList(res.formsList);
+        else renderUmrahFormsList(localForms);
         showToast('Borang kursus berjaya dijana.');
       }).catch(err => { showLoading(false); showToast(err.message || 'Gagal menjana borang.', true); });
     }
