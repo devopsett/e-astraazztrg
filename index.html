@@ -3171,7 +3171,11 @@
 
       btn.disabled = true; btn.textContent = 'Mengesahkan PIN...';
       try {
-        const res = await fetch(withToken(SCRIPT_URL), { method: 'POST', headers: apiHeaders(), body: apiBody({ action: 'logMasuk', data: { pin: pin } }) });
+        const res = await fetch(withToken(SCRIPT_URL), {
+          method: 'POST',
+          headers: apiHeaders(),
+          body: apiBody({ action: 'logMasuk', data: { pin: pin } })
+        });
         const hasil = await res.json();
         if (!hasil.ok) throw new Error(hasil.message || 'PIN tidak sah.');
         simpanSesi(hasil.token, hasil.pengguna, hasil.luput); padamSemuaPin();
